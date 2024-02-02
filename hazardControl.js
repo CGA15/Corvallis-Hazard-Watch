@@ -52,44 +52,44 @@ let Control = class{
 }
 //TEST CODE BELOW
 
-// var hazlist = [
-//     {
-//         lat: 44.59,  
-//         date: "10:09",
-//         long: -123.2677,
-//         type: "flood",
-//         icon: null,
-//         text: "Text",
-//         image: null
-//     },
-//     {
-//         lat: 44.58,
-//         date: "10:09",
-//         long: -123.2677,
-//         type: "flood",
-//         icon: null,
-//         text: "Text",
-//         image: null
-//     },
-//     {
-//         lat: 44.57,
-//         date: "10:09",
-//         long: -123.2677,
-//         type: "flood",
-//         icon: null,
-//         text: "Text",
-//         image: null
-//     },
-//     {
-//         lat: 44.56,
-//         date: "10:09",
-//         long: -123.2677,
-//         type: "flood",
-//         icon: null,
-//         text: "Text",
-//         image: null
-//     }
-// ];
+var hazlist = [
+    {
+        lat: 44.59,  
+        date: "10:09",
+        long: -123.2677,
+        type: "flood",
+        icon: null,
+        text: "Text",
+        image: null
+    },
+    {
+        lat: 44.58,
+        date: "10:09",
+        long: -123.2677,
+        type: "flood",
+        icon: null,
+        text: "Text",
+        image: null
+    },
+    {
+        lat: 44.57,
+        date: "10:09",
+        long: -123.2677,
+        type: "flood",
+        icon: null,
+        text: "Text",
+        image: null
+    },
+    {
+        lat: 44.56,
+        date: "10:09",
+        long: -123.2677,
+        type: "flood",
+        icon: null,
+        text: "Text",
+        image: null
+    }
+];
 
 
 // hazardList = new Control(hazlist,map)
@@ -124,4 +124,4 @@ let Control = class{
 
 
 //     hazard = new Hazard(haz,map)
-//     hazardList.insert(hazard)
+//         hazardList.insert(hazard)

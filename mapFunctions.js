@@ -1,3 +1,8 @@
+// import Hazard from './hazard';
+// import Control from './hazardControl';
+
+
+
 var map = L.map('map').setView([44.5646, -123.2620], 15);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,

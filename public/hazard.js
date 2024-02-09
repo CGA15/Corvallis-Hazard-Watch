@@ -1,10 +1,10 @@
 let Hazard = class{
     constructor(hazard,map){
-        this.lat=hazard.lat
-        this.date = hazard.date
-        this.long=hazard.long
+        this.lat=hazard.latitude
+        this.date = hazard.created_at
+        this.long=hazard.longitude
         this.type=hazard.type
-        this.icon=hazard.icon
+        this.icon=hazard.icon_type
         this.text=hazard.text
         this.image=hazard.image
         this.marker=null

@@ -25,7 +25,7 @@ app.get('/', function (req, res, next) {
     })
 })
 
-app.get('/api/Hazards', async (req, res) => {
+app.get('/api/getHazards', async (req, res) => {
     try {
         const { data, error } = await supabase.from('hazards').select('*');
 
@@ -38,7 +38,6 @@ app.get('/api/Hazards', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-
 });
 
 app.post('/api/addHazard', async (req, res) => {
@@ -61,6 +60,90 @@ app.post('/api/addHazard', async (req, res) => {
     }
 });
 
+app.get('/api/getUsers', async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('user').select('*');
+  
+        if (error) {
+            throw error;
+        }
+  
+        res.json({ data });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+app.post('/api/addUser', async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('user').insert([{ username: req.body.username, email: req.body.email, password: req.body.password }]);
+    
+        if (error) {
+          throw error;
+        }
+    
+        res.json({ data });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+});
+
+
+app.put('/api/editHazard/:id', async (req, res) => {
+    const hazID = req.params.id;
+    const updateData = req.body;
+  
+    try {
+      const { data, error } = await supabase.from('hazards').update(updateData).eq('id', hazID);
+  
+      if (error) {
+        throw error;
+      }
+  
+      res.json({ message: 'Hazard updated successfully' })
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  
+});
+
+app.delete('/api/deleteHazard/:id', async (req, res) => {
+
+    try {
+      const { data, error } = await supabase.from('hazards').delete().eq('id', req.params.id);
+  
+      if (error) {
+        throw error;
+      }
+  
+      res.json({ message: 'Hazard deleted successfully' });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.delete('/api/deleteUser/:id', async (req, res) => {
+
+    try {
+      const { data, error } = await supabase.from('user').delete().eq('id', req.params.id);
+  
+      if (error) {
+        throw error;
+      }
+  
+      res.json({ message: 'User deleted successfully' });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 
 

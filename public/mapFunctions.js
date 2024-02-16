@@ -65,60 +65,60 @@ function onMapClick(e) {
   var popupContent = 
   //working code
   
-//   `
-//   <div>
-//     <h3>Please select a type of issue</h3>
-//     <select name="hazard" id="hazard">
-//       <option value="crash">crash</option>
-//       <option value="Flood">Flood</option>
-//       <option value="Cop">Cop</option>
-//       <option value="Other">Other</option>
-//     </select>
-//   </div>
-//   <div>
-//     <input type="radio" name="htype" id="pointRadio" onclick="updatePopupContent()"> Point<br />
-//     <input type="radio" name="htype" id="circleRadio" onclick="updatePopupContent()"> Circle<br />
-//     <div id="radiusSlider" style="display:none;">
-//       <label for="radius">Radius:</label>
-//       <input type="range" id="radius" name="radius" min="1" max="200" value="100">
-//       <span id="radiusValue">50</span> meters
-//     </div>
-//     <button onclick="closePopup()">Close</button>
-//     <button onclick="submitData(${e.latlng.lat}, ${e.latlng.lng}, document.getElementById('hazard').value, '${new Date().toLocaleString()}', getHazardType(), getRadius())">Submit</button>
-//   </div>
-// `;
+  `
+  <div>
+    <h3>Please select a type of issue</h3>
+    <select name="hazard" id="hazard">
+      <option value="crash">crash</option>
+      <option value="Flood">Flood</option>
+      <option value="Cop">Cop</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+  <div>
+    <input type="radio" name="htype" id="pointRadio" onclick="updatePopupContent()"> Point<br />
+    <input type="radio" name="htype" id="circleRadio" onclick="updatePopupContent()"> Circle<br />
+    <div id="radiusSlider" style="display:none;">
+      <label for="radius">Radius:</label>
+      <input type="range" id="radius" name="radius" min="1" max="200" value="100">
+      <span id="radiusValue">50</span> meters
+    </div>
+    <button onclick="closePopup()">Close</button>
+    <button onclick="submitData(${e.latlng.lat}, ${e.latlng.lng}, document.getElementById('hazard').value, '${new Date().toLocaleString()}', getHazardType(), getRadius())">Submit</button>
+  </div>
+`;
 
 //fancy style
 
-`<nav class="menu">
-    <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
-    <label class="menu-open-button" for="menu-open">
-     <span class="lines line-1"></span>
-     <span class="lines line-2"></span>
-     <span class="lines line-3"></span>
-   </label>
+// `<nav class="menu">
+//     <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+//     <label class="menu-open-button" for="menu-open">
+//      <span class="lines line-1"></span>
+//      <span class="lines line-2"></span>
+//      <span class="lines line-3"></span>
+//    </label>
 
-    <a href="#" class="menu-item blue"> <i class="fa fa-balance-scale"></i> 
-    <div class="menu-item blue blue-content">
-       Police</div>
-    </a>
-    <a href="#" class="menu-item green"> <i class="fa fa-bolt"></i>
-      <div class="menu-item green green-content">
-        Weather</div> 
-    </a>
-    <a href="#" class="menu-item red"> <i class="fa fa-road"></i>
-      <div class="menu-item red red-content">
-        Vehicle</div> 
-    </a>
-    <a href="#" class="menu-item purple"> <i class="fa fa-map-signs"></i>
-      <div class="menu-item purple purple-content">
-      POI</div>
-    </a>
-    <a href="#" class="menu-item lightblue"> <i class="fa fa-hourglass-start"><i>
-      <div class="menu-item lightblue lightblue-content">
-        Traffic</div> 
-    </a>
- </nav>`;
+//     <a href="#" class="menu-item blue"> <i class="fa fa-balance-scale"></i> 
+//     <div class="menu-item blue blue-content">
+//        Police</div>
+//     </a>
+//     <a href="#" class="menu-item green"> <i class="fa fa-bolt"></i>
+//       <div class="menu-item green green-content">
+//         Weather</div> 
+//     </a>
+//     <a href="#" class="menu-item red"> <i class="fa fa-road"></i>
+//       <div class="menu-item red red-content">
+//         Vehicle</div> 
+//     </a>
+//     <a href="#" class="menu-item purple"> <i class="fa fa-map-signs"></i>
+//       <div class="menu-item purple purple-content">
+//       POI</div>
+//     </a>
+//     <a href="#" class="menu-item lightblue"> <i class="fa fa-hourglass-start"><i>
+//       <div class="menu-item lightblue lightblue-content">
+//         Traffic</div> 
+//     </a>
+//  </nav>`;
 
   var popup = L.popup()
     .setLatLng(e.latlng)

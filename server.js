@@ -34,7 +34,17 @@ app.get('/map/:request', function (req, res, next) {
         }
     });
 });
-
+app.get('/font-awesome-4.7.0/css/:item',function(req,res,next){
+    const filepath=__dirname+ "/font-awesome-4.7.0/css/" + item;
+    console.log("=========" + filepath)
+    res.sendFile(filepath, function (err) {
+        if (err) {
+            next(err); // Pass the error to the next middleware
+        } else {
+            console.log('File sent:', filepath);
+        }
+    });
+})
 app.get('/api/Hazards', async (req, res) => {
     try {
         const { data, error } = await supabase.from('hazards').select('*');

@@ -56,7 +56,7 @@ app.post('/api/addHazard', async (req, res) => {
         const { data, error } = await supabase
             .from('hazards')
             .insert([
-                { type: req.body.type, latitude: req.body.latitude, longitude: req.body.longitude, text: req.body.text, creator_id: req.body.creator_id},
+                { type: req.body.type, latitude: req.body.latitude, longitude: req.body.longitude, text: req.body.text, creator_id: req.body.creator_id, radius: req.body.radius},
             ])
             .select()
 

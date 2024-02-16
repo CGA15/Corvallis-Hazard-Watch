@@ -9,9 +9,11 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 var controller
-function testHazard(lat, long, time, htype) {
+function testHazard(lat, long, htype, time, rad) {
   // var marker = L.marker([lat,long]).addTo(map);
   // marker.bindPopup("<b>"+type+" reported at "+time+"<b>");
+  if (rad==0)
+    rad =null
   hazard = {
     latitude: lat,
     longitude: long,
@@ -20,7 +22,8 @@ function testHazard(lat, long, time, htype) {
     icon_type: null,
     text: "dummy",
     image: null,
-    creator_id: 4
+    creator_id: 4,
+    radius: rad
   }
   controller.insert(hazard)
   fetch('./api/addHazard', {
@@ -123,11 +126,12 @@ function closePopup() {
 function submitData(lat, long, hazardType, time, type, rad) {
   // Handle submission logic here
   alert(`Data submitted!\nLat: ${lat}\nLong: ${long}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}`);
-  if (type == "Circle") {
-    circleHazard(lat, long, hazardType, time, rad)
-  }
-  else if (type == "Point")
-    testHazard(lat, long, hazardType, time)
+  // if (type == "Circle") {
+  //   circleHazard(lat, long, hazardType, time, rad)
+  // }
+  // else if (type == "Point")
+  console.log(rad)
+    testHazard(lat, long, hazardType, time, rad)
   map.closePopup();
 }
 
@@ -148,22 +152,22 @@ async function fetchDataFromServer() {
     // Process the data as needed
     // Example: Update the map based on the fetched data
     controller = new Control(data.data, map)
-    // map.on('zoomend', function () {
-    //   // Get the current zoom level
-    //   const currentZoom = map.getZoom();
+    map.on('zoomend', function () {
+      // Get the current zoom level
+      const currentZoom = map.getZoom();
 
-    //   // Check if the zoom level is below a certain threshold
-    //   if (currentZoom >= 13) {
-    //       // Zoomed out, do something
-    //       console.log('Zoom bound');
-    //       controller.viewAll();
-    //   }
-    //   else
-    //   {
-    //       console.log('Zoom bound');
-    //       controller.removeAll();
-    //   }
-    // });
+      // Check if the zoom level is below a certain threshold
+      if (currentZoom >= 13) {
+          // Zoomed out, do something
+          console.log('Zoom bound');
+          controller.viewAll();
+      }
+      else
+      {
+          console.log('Zoom bound');
+          controller.removeAll();
+      }
+    });
 
 
   } catch (error) {

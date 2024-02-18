@@ -1,4 +1,4 @@
-let Hazard = class{
+export default class Hazard {
     constructor(hazard,map){
         this.lat=hazard.latitude
         this.date = hazard.created_at
@@ -37,8 +37,20 @@ let Hazard = class{
                         
                     })
                 }
-                else{        
-                    this.marker=L.marker([this.lat,this.long])
+                else{       
+                    if(this.icon === null) {
+                        var standardIcon = L.icon({
+                            iconUrl: '/assets/icons/marker-icon.png',
+                            shadowUrl: '/assets/icons/marker-shadow.png',
+                        
+                            iconSize:     [25, 41], // size of the icon
+                            shadowSize:   [41, 41], // size of the shadow
+                            iconAnchor:   [12, 41], // point of the icon which will correspond to marker's location
+                            shadowAnchor: [12, 41],  // the same for the shadow
+                            popupAnchor:  [-3, -41] // point from which the popup should open relative to the iconAnchor
+                        });
+                    }
+                    this.marker=L.marker([this.lat,this.long],{icon: standardIcon})
                 }
             }
             this.marker.addTo(this.map);

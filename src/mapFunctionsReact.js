@@ -95,7 +95,8 @@
         
         }
         onMapClick(e) {
-            var popupContent = `
+            var popupContent = 
+            `
                 <div>
                     <h3>Please select a type of issue</h3>
                     <select name="hazard" id="hazard">
@@ -115,7 +116,41 @@
                     </div>
                     <button id="closeButton">Close</button>
                     <button id="submitButton">Submit</button>
-                </div>`;
+                </div>`
+
+                //fancy style
+
+                // `<nav class="menu">
+                // <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+                // <label class="menu-open-button" for="menu-open">
+                // <span class="lines line-1"></span>
+                // <span class="lines line-2"></span>
+                // <span class="lines line-3"></span>
+                // </label>
+
+                // <a href="#" class="menu-item blue"> <i class="fa fa-balance-scale"></i> 
+                // <div class="menu-item blue blue-content">
+                // Police</div>
+                // </a>
+                // <a href="#" class="menu-item green"> <i class="fa fa-bolt"></i>
+                // <div class="menu-item green green-content">
+                //     Weather</div> 
+                // </a>
+                // <a href="#" class="menu-item red"> <i class="fa fa-road"></i>
+                // <div class="menu-item red red-content">
+                //     Vehicle</div> 
+                // </a>
+                // <a href="#" class="menu-item purple"> <i class="fa fa-map-signs"></i>
+                // <div class="menu-item purple purple-content">
+                // POI</div>
+                // </a>
+                // <a href="#" class="menu-item lightblue"> <i class="fa fa-hourglass-start"><i>
+                // <div class="menu-item lightblue lightblue-content">
+                //     Traffic</div> 
+                // </a>
+                // </nav>`
+                
+                ;
         
             L.popup()
                 .setLatLng(e.latlng)

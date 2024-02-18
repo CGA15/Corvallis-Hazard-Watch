@@ -25,30 +25,30 @@
     app.get('/', function (req, res, next) {
         res.sendFile(__dirname + "/dist/index.html");
     });
-    app.get('/map/:request', function (req, res, next) {
-        const requestedFile = req.params.request;
-        const filePath = __dirname + "/dist/" + requestedFile;
+    // app.get('/map', function (req, res, next) {
+    //     const requestedFile = req.params.request;
+    //     const filePath = __dirname + "/dist/" + requestedFile;
 
-        res.sendFile(filePath, function (err) {
-            if (err) {
-                next(err); // Pass the error to the next middleware
-            } else {
-                console.log('File sent:', filePath);
-            }
-        });
-    });
+    //     res.sendFile(filePath, function (err) {
+    //         if (err) {
+    //             next(err); // Pass the error to the next middleware
+    //         } else {
+    //             console.log('File sent:', filePath);
+    //         }
+    //     });
+    // });
 
-    app.get('/font-awesome-4.7.0/css/:item',function(req,res,next){
-        const filepath=__dirname+ "/font-awesome-4.7.0/css/" + item;
-        console.log("=========" + filepath)
-        res.sendFile(filepath, function (err) {
-            if (err) {
-                next(err); // Pass the error to the next middleware
-            } else {
-                console.log('File sent:', filepath);
-            }
-        });
-    })
+    // app.get('/font-awesome-4.7.0/css/:item',function(req,res,next){
+    //     const filepath=__dirname+ "/font-awesome-4.7.0/css/" + item;
+    //     console.log("=========" + filepath)
+    //     res.sendFile(filepath, function (err) {
+    //         if (err) {
+    //             next(err); // Pass the error to the next middleware
+    //         } else {
+    //             console.log('File sent:', filepath);
+    //         }
+    //     });
+    // })
     app.get('/api/Hazards', async (req, res) => {
         try {
             const { data, error } = await supabase.from('hazards').select('*');
@@ -88,11 +88,9 @@
 
 
 
-    app.use('*', function (req, res, next) {
-        res.status(404).send({
-            err: "This URL was not recognized: " + req.originalUrl
-        })
-    })
+    app.get('*', function (req, res, next) {
+        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    });
 
 
 

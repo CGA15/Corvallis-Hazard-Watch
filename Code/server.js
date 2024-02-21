@@ -1,9 +1,12 @@
+require('dotenv').config()
+
 const express = require("express")
 const app = express()
 const router = express.Router();
 const login = express.Router();
 const request = require('request');
 const port = process.env.PORT || 8000
+const path = require('path');
 
 const CLIENT_SECRET = process.env.AUTH0_SECRET_KEY;
 
@@ -46,11 +49,24 @@ const checkJwt = jwt({
     algorithms: ['RS256']
 });
 
+app.use(express.static(path.join(__dirname, 'template')));
 
-app.get('/', function (req, res, next) {
+// =============== AUTH DEFINITIONS ================
+
+
+
+
+
+// =============== ENDPOINTS =======================
+
+app.get('/helloworld', function (req, res, next) {
     res.status(200).send({
         msg: "Hello, world!"
     })
+});
+
+app.get('/', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'template', 'login.html'));
 })
 
 app.get('/api/getHazards', async (req, res) => {
@@ -202,7 +218,7 @@ login.post('/', function(req, res){
 });
 
 
-//app.use('/lodgings', router);
+//app.use('/', home);
 app.use('/login', login);
 
 app.use('*', function (req, res, next) {
@@ -210,9 +226,6 @@ app.use('*', function (req, res, next) {
         err: "This URL was not recognized: " + req.originalUrl
     })
 })
-
-//app.use('/lodgings', router);
-//app.use('/login', login);
 
 app.listen(port, function () {
     console.log("== Server is listening on port:", port)

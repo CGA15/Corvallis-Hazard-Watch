@@ -1,7 +1,7 @@
     // import Hazard from './hazard';
     import Control from './hazardControl';
 
-
+//This object controls the main page
     export default class MapFunctions {
         constructor() {
             this.map = null;
@@ -17,11 +17,13 @@
             this.getHazardType = this.getHazardType.bind(this);
             this.getRadius = this.getRadius.bind(this); 
         }
+        // initialize the map functions
         setUpMap(map){
             this.map = map;
             this.map.on('click', (e) => this.onMapClick(e)); 
             this.setUpController() 
         }
+        //calls the server to get the data points then feeds it into the array list
         async setUpController() {
             try {
                 const response = await fetch('/api/hazards');
@@ -53,6 +55,7 @@
                 console.error('Error fetching data:', error.message);
             }
         }
+        // creates a new hazard object and inserts it into the array list, then it sends it to the data base
         newHazard(lat, long, htype, time, rad) {
             // var marker = L.marker([lat,long]).addTo(map);
             // marker.bindPopup("<b>"+type+" reported at "+time+"<b>");
@@ -72,9 +75,9 @@
             console.log(hazard)
             this.control.insert(hazard)
             fetch('./api/addHazard', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(hazard),
           })
@@ -94,6 +97,7 @@
             });
         
         }
+        // when you click the map the pop up shows up
         onMapClick(e) {
             var popupContent = 
             `
@@ -158,6 +162,7 @@
                 .openOn(this.map);
         
             // Attach event listeners after the content is added to the DOM
+            //make sure to attach after, as the this operation with html elements doesnt work well.
             document.getElementById('pointRadio').addEventListener('click', () => this.updatePopupContent());
             document.getElementById('circleRadio').addEventListener('click', () => this.updatePopupContent());
             document.getElementById('closeButton').addEventListener('click', () => this.closePopup());
@@ -165,6 +170,7 @@
                 this.submitData(e.latlng.lat, e.latlng.lng, document.getElementById('hazard').value, new Date().toLocaleString(), this.getHazardType(), this.getRadius())
             );
         }
+        // function to display the radius slider, if you select circle 
         updatePopupContent() {
             var circleRadio = document.getElementById('circleRadio');
             var radiusSlider = document.getElementById('radiusSlider');
@@ -175,11 +181,12 @@
             radiusSlider.style.display = 'none';
             }
         }
+        // returns the selected data type that was selected
         getHazardType() {
             var pointRadio = document.getElementById('pointRadio');
             return pointRadio.checked ? 'Point' : 'Circle';
         }
-        
+        // returns radius from radius slider.
         getRadius() {
             var circleRadio = document.getElementById('circleRadio');
             var radiusSlider = document.getElementById('radius');
@@ -195,7 +202,7 @@
         closePopup() {
             this.map.closePopup();
         }
-        
+        //function for when you click the submit button. 
         submitData(lat, long, hazardType, time, type, rad) {
             // Handle submission logic here
             alert(`Data submitted!\nLat: ${lat}\nLong: ${long}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}`);

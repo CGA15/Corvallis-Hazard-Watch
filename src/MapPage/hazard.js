@@ -14,6 +14,7 @@ export default class Hazard {
         this.show()
         
     }
+    //removes itself from map
     remove(){
         if(this.visible)
         {
@@ -21,6 +22,7 @@ export default class Hazard {
             this.visible=false  ;
         }
     }
+    //adds itself to the map
     show(){
         if(!this.visible)
         {
@@ -37,7 +39,9 @@ export default class Hazard {
                         
                     })
                 }
-                else{       
+                else{   
+                    
+                    //format to create a custon icon for popups
                     if(this.icon === null) {
                         var standardIcon = L.icon({
                             iconUrl: '/assets/icons/marker-icon.png',

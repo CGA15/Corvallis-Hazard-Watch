@@ -3,14 +3,14 @@ import L from 'leaflet';
 import MapFunctions from './mapFunctionsReact';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS for styling
 
-
+//This is the react page for the map page
 const MapPage = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const mapFunctions = new MapFunctions()
     
 
-
+  //when the page loads, it will run this code to initialize the map
   useEffect(() => {
     // Function to initialize the map
     const initializeMap = () => {
@@ -30,7 +30,7 @@ const MapPage = () => {
       }
     };
   
-    // Check if the map container ref is defined before calling the function
+    // Check if the map container ref is defined before calling the function to not try to initialize a second time
     if (mapContainerRef.current) {
       initializeMap();
       
@@ -38,11 +38,12 @@ const MapPage = () => {
   
     // Specify any cleanup code if needed
     return () => {
-      // Cleanup code (optional)
+      // Cleanup code, not currently needed
     };
   }, []); // Empty dependency array ensures that it runs only once on mount
   
   return (
+    //current map, to change height, modify the height variable, likely you could modify width by adding that aas a field
     <div ref={mapContainerRef} id="map" style={{ height: '500px' }}>
     </div>
   );

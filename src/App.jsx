@@ -11,6 +11,7 @@ const App = () => {
       <nav className='navBar'>
         <h1>
           <Link to="/map">Map</Link>
+          <Link to="/login" method="GET">Login</Link>
         </h1>
       </nav>
 
@@ -23,3 +24,7 @@ const App = () => {
 };
 
 export default App;
+
+
+
+

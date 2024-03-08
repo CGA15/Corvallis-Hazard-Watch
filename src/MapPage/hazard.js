@@ -1,9 +1,12 @@
+import types from "./hazardTypes.json"
 export default class Hazard {
     constructor(hazard,map){
         this.lat=hazard.latitude
-        this.date = hazard.created_at
+        this.dateObject = hazard.created_at
+        this.date=this.dateObject.toLocaleString()
         this.long=hazard.longitude
-        this.type=hazard.type
+        // console.log(typeof(hazard.type))
+        this.type=types.data.find(type => type.id === hazard.type)?.name || "Other";
         this.icon=hazard.icon_type
         this.text=hazard.text
         this.image=hazard.image
@@ -13,6 +16,21 @@ export default class Hazard {
         this.visible=false
         this.show()
         
+    }
+    convertIsoToCustomFormat(isoString) {
+        const dateTime = new Date(isoString);
+        
+        // Extract components
+        const month = dateTime.getMonth() + 1; // Months are zero-based
+        const day = dateTime.getDate();
+        const year = dateTime.getFullYear();
+        const hours = dateTime.getHours();
+        const minutes = dateTime.getMinutes();
+    
+        // Format the components
+        const customFormat = `${month}/${day}/${year}, ${hours}:${minutes}`;
+    
+        return customFormat;
     }
     //removes itself from map
     remove(){

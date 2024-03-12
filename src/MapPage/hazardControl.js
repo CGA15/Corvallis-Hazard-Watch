@@ -3,9 +3,13 @@ import Hazard from './hazard'; // Import Hazard if it's in a separate module
 //This is an array list object
 export default class Control {
     constructor(hazardList, map) {
+        this.hazardList = hazardList
         this.size = hazardList.length;
         this.current = 0;
         var temp = this.size;
+        console.log("hazardList")
+        console.log(hazardList)
+        console.log(typeof hazardList[0].created_at)
         this.container;
         this.map =map;
         if (this.size < 50) {
@@ -16,8 +20,10 @@ export default class Control {
             this.container = new Array(100);
         }
         for (let i = 0; i < temp; i++) {
-            hazardList[i].created_at=new Date(hazardList[i].created_at)
-            this.insert(hazardList[i]);
+            // Deep copy each object in hazardList
+            let hazard = JSON.parse(JSON.stringify(this.hazardList[i]));
+            hazard.created_at = new Date(hazard.created_at);
+            this.insert(hazard);
         }
         this.currentDate= new Date()
         var twentyFourHoursAgo = new Date(this.currentDate.getTime() - (24 * 60 * 60 * 1000))

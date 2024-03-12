@@ -20,25 +20,26 @@ export default class MapFunctions {
         this.filter = this.filter.bind(this)
     }
     // initialize the map functions
-    setUpMap(map) {
+    setUpMap(map,hazards) {
         this.map = map;
         this.map.on('click', (e) => this.onMapClick(e));
-        this.setUpController()
+        var hazlist = hazards
+        this.setUpController(hazlist)
     }
     //calls the server to get the data points then feeds it into the array list
-    async setUpController() {
-        try {
-            const response = await fetch('/api/hazards');
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('Data from server:', data);
+    async setUpController(hazards) {
+        // try {
+            // const response = await fetch('/api/hazards');
+            // if (!response.ok) {
+            //     throw new Error(`HTTP error! Status: ${response.status}`);
+            // }
+            var data = hazards
+            // const data = await response.json();
+            console.log('Data from store:', data);
 
             // Process the data as needed
             // Example: Update the map based on the fetched data
-            const control = new Control(data.data, this.map);
+            const control = new Control(data, this.map);
             this.control = control; // Set the control outside the function
 
             // this.map.on('zoomend', () => {
@@ -53,9 +54,9 @@ export default class MapFunctions {
             //     }
             // });
 
-        } catch (error) {
-            console.error('Error fetching data:', error.message);
-        }
+        // } catch (error) {
+        //     console.error('Error fetching data:', error.message);
+        // }
     }
     filter(start, end, types) {
         console.log("we get here")

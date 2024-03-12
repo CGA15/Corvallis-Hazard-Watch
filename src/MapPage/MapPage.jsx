@@ -5,6 +5,9 @@ import MapFunctions from './mapFunctionsReact';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS for styling
 import { css } from '@emotion/react';
 import hazardTypes from "./hazardTypes.json"
+import { useDispatch,useSelector } from 'react-redux';
+import { selectStore } from '../redux/storeSlice';
+
 
 
 //This is the react page for the map page 
@@ -21,6 +24,7 @@ const MapPage = () => {
   const [selectedHazards, setSelectedHazards] = useState({});
   const [map, setMap] = useState(null)
   const [setUpOnce, setSetUpOnce] = useState(false)
+  const hazards = useSelector(selectStore)
   
 
 
@@ -29,6 +33,8 @@ const MapPage = () => {
   //when the page loads, it will run this code to initialize the map
   useEffect(() => {
     // Function to initialize the map
+    if(hazards)
+    {
     const initializeMap = () => {
       // Check if the map is already initialized
       if (!mapContainerRef.current._leaflet_id) {
@@ -43,12 +49,12 @@ const MapPage = () => {
     if (mapContainerRef.current) {      initializeMap();
 
     }
-
+  }
     // Specify any cleanup code if needed
     return () => {
       // Cleanup code, not currently needed
     };
-  }, []); // Empty dependency array ensures that it runs only once on mount
+  }, [hazards]); // Empty dependency array ensures that it runs only once on mount
   useEffect (() =>{
     if(map && !setUpOnce)
     {
@@ -60,16 +66,20 @@ const MapPage = () => {
       mapRef.current = map;
       setMapFunctions(new MapFunctions())
     }
-  },map, setUpOnce)
+  },[map, setUpOnce])
   useEffect (() => {
-    if(mapFunctions)
+    if(mapFunctions && hazards.length>0)
     {
       console.log("setUp called")
-      mapFunctions.setUpMap(map)
+      mapFunctions.setUpMap(map,hazards)
+      
+      console.log("check Redux")
+      console.log(hazards)
     }
-  }, mapFunctions)
+  }, [mapFunctions,hazards])
   const openFilters = () => {
     setDropDown(!dropDown)
+
   }
   const submitFilters = () => {
     // Gather filter values
@@ -133,7 +143,7 @@ const MapPage = () => {
               onChange={(e) => setEndDate(e.target.value)}
             />
             {/* <button>Options</button> */}
-            <div id="list1" className="dropdown-check-list" tabindex="100">
+            <div id="list1" className="dropdown-check-list" tabIndex="100">
               <span className="anchor" onClick={() => setCheckList(!checkList)}>Hazard Types</span>
               {checkList && (  
                 <ul className="items">

@@ -4,10 +4,11 @@ import hazardTypes from './hazardTypes.json'
 
 //This object controls the main page
 export default class MapFunctions {
-    constructor() {
+    constructor(haztypes) {
         this.map = null;
         this.control = null;
-
+        this.haztypes = haztypes
+        // console.log(this.hazardTypes)
         // this.map.on('click', (e) => this.onMapClick(e)); 
         this.setUpMap = this.setUpMap.bind(this);
         this.onMapClick = this.onMapClick.bind(this);
@@ -35,21 +36,23 @@ export default class MapFunctions {
             // }
             var data = hazards
             // const data = await response.json();
-            console.log('Data from store:', data);
+            //console.log('Data from store:', data);
 
             // Process the data as needed
             // Example: Update the map based on the fetched data
-            const control = new Control(data, this.map);
+            console.log("haz types test in map functions")
+            console.log(this.haztypes)
+            const control = new Control(data, this.map,  this.haztypes);
             this.control = control; // Set the control outside the function
 
             // this.map.on('zoomend', () => {
             //     const currentZoom = this.map.getZoom();
 
             //     if (currentZoom >= 13) {
-            //         console.log('Zoom bound');
+            //         //console.log('Zoom bound');
             //         control.viewAll();
             //     } else {
-            //         console.log('Zoom bound');
+            //         //console.log('Zoom bound');
             //         control.removeAll();
             //     }
             // });
@@ -59,8 +62,8 @@ export default class MapFunctions {
         // }
     }
     filter(start, end, types) {
-        console.log("we get here")
-        console.log(this)
+        //console.log("we get here")
+        //console.log(this)
         this.control.filter(start, end, types)
     }
     // creates a new hazard object and inserts it into the array list, then it sends it to the data base
@@ -80,9 +83,9 @@ export default class MapFunctions {
             creator_id: 4,
             radius: rad
         }
-        console.log(hazard)
+        //console.log(hazard)
         this.control.insert(hazard)
-        console.log(this.control)
+        //console.log(this.control)
         fetch('./api/addHazard', {
             method: 'POST',
             headers: {
@@ -97,7 +100,7 @@ export default class MapFunctions {
                 return response.json();
             })
             .then(data => {
-                console.log('Server response:', data);
+                //console.log('Server response:', data);
                 // Handle the response data as needed
             })
             .catch(error => {
@@ -214,7 +217,7 @@ export default class MapFunctions {
     submitData(lat, long, hazardType, time, type, rad) {
         // Handle submission logic here
         alert(`Data submitted!\nLat: ${lat}\nLong: ${long}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}`);
-        console.log(rad)
+        //console.log(rad)
         this.newHazard(lat, long, hazardType, time, rad)
         this.map.closePopup();
     }

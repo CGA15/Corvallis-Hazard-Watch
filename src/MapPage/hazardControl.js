@@ -2,14 +2,15 @@ import Hazard from './hazard'; // Import Hazard if it's in a separate module
 
 //This is an array list object
 export default class Control {
-    constructor(hazardList, map) {
+    constructor(hazardList, map, haztypes) {
         this.hazardList = hazardList
+        this.hazTypes =haztypes
         this.size = hazardList.length;
         this.current = 0;
         var temp = this.size;
-        console.log("hazardList")
-        console.log(hazardList)
-        console.log(typeof hazardList[0].created_at)
+        console.log("testing in control hazTypes")
+        console.log(this.hazTypes)
+        // console.log(typeof hazTypes[0].created_at)
         this.container;
         this.map =map;
         if (this.size < 50) {
@@ -31,8 +32,8 @@ export default class Control {
     }
 //inserts a hazard into the list
     insert(hazard) {
-        console.log("test")
-        var newHazard = new Hazard(hazard, this.map);
+        //console.log("test")
+        var newHazard = new Hazard(hazard, this.map, this.hazTypes);
         if (this.current == this.size) {
             this.grow();
         }

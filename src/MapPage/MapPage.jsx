@@ -4,15 +4,17 @@ import L from 'leaflet';
 import MapFunctions from './mapFunctionsReact';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS for styling
 import { css } from '@emotion/react';
-import hazardTypes from "./hazardTypes.json"
+// import hazardTypes from "./hazardTypes.json"
 import { useDispatch,useSelector } from 'react-redux';
 import { selectStore } from '../redux/storeSlice';
+import { selectHazTypes } from '../redux/hazTypesRedux';
 
 
 
 //This is the react page for the map page 
 const MapPage = () => {
   const mapContainerRef = useRef(null);
+  const haztypes= useSelector(selectHazTypes)
   const mapRef = useRef(null);
   const [mapFunctions, setMapFunctions] =  useState(null)
   const [dropDown, setDropDown] = useState(false)
@@ -25,6 +27,8 @@ const MapPage = () => {
   const [map, setMap] = useState(null)
   const [setUpOnce, setSetUpOnce] = useState(false)
   const hazards = useSelector(selectStore)
+  const hazardTypes = useSelector(selectHazTypes)
+  
   
 
 
@@ -64,17 +68,19 @@ const MapPage = () => {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       mapRef.current = map;
-      setMapFunctions(new MapFunctions())
+      console.log("haztypes check one")
+      console.log(haztypes)
+      setMapFunctions(new MapFunctions(haztypes))
     }
   },[map, setUpOnce])
   useEffect (() => {
     if(mapFunctions && hazards.length>0)
     {
-      console.log("setUp called")
+      //console.log("setUp called")
       mapFunctions.setUpMap(map,hazards)
       
-      console.log("check Redux")
-      console.log(hazards)
+      //console.log("check Redux")
+      //console.log(hazards)
     }
   }, [mapFunctions,hazards])
   const openFilters = () => {
@@ -91,7 +97,7 @@ const MapPage = () => {
       hazards =  "All";
     }
 
-    console.log(start, end, hazards);
+    //console.log(start, end, hazards);
 
     // Pass filters to mapFunctions.filter()
     mapFunctions.filter(start,end,hazards);
@@ -115,7 +121,7 @@ const MapPage = () => {
 //     checkList.classList.add('visible');
 // }
  const openCheckList = () =>{
-  console.log("hello")
+  //console.log("hello")
   setCheckList(!checkList)
  }
  const filterBox = css`
@@ -147,7 +153,7 @@ const MapPage = () => {
               <span className="anchor" onClick={() => setCheckList(!checkList)}>Hazard Types</span>
               {checkList && (  
                 <ul className="items">
-                  {hazardTypes.data.map(hazard => (
+                  {hazardTypes.map(hazard => (
                     <li key={hazard.id}>
                       <input
                         id={hazard.id}

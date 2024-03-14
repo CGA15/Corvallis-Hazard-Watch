@@ -7,8 +7,8 @@ export const fetchData = createAsyncThunk('store/fetchData', async () => {
   try {
     const response = await fetch(FileLocation);
     const data = await response.json();
-    console.log("data from redux fetch")
-    console.log(data.data);
+    //console.log("data from redux fetch")
+    //console.log(data.data);
     return data.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -37,8 +37,8 @@ export const { add } = storeSlice.actions;
 export const selectItems = storeSlice.selectSlice;
 
 export function selectStore(state) {
-  console.log(`state = ${state}`);
+  //console.log(`state = ${state}`);
   const items = selectItems(state);
-  console.log(`== items ${items}`);
+  //console.log(`== items ${items}`);
   return items;
 }

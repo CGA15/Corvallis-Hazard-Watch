@@ -1,6 +1,10 @@
 // import Hazard from './hazard';
 import Control from './hazardControl';
 import hazardTypes from './hazardTypes.json'
+import { useDispatch } from 'react-redux'; // Import useDispatch hook to dispatch actions
+import store from '../redux/store'; // Path to your Redux store
+import {add} from '../redux/storeSlice'
+
 
 //This object controls the main page
 export default class MapFunctions {
@@ -85,6 +89,8 @@ export default class MapFunctions {
         }
         //console.log(hazard)
         this.control.insert(hazard)
+        const dispatch = useDispatch()
+        dispatch(add(hazard))
         //console.log(this.control)
         fetch('./api/addHazard', {
             method: 'POST',

@@ -11,7 +11,7 @@ const store = configureStore({
 })
 
 store.subscribe(() => {
-    console.log("== store:", store.getState())
+    //console.log("== store:", store.getState())
 })
 
 

@@ -6,9 +6,6 @@ export default class Hazard {
         this.date=this.dateObject.toLocaleString()
         this.types = haztypes
         this.long=hazard.longitude
-        //console.log(typeof(hazard.type))
-        console.log("test in hazard")
-        console.log(this.types)
         this.type=this.types.find(type => type.id === hazard.type)?.name || "Other";
         this.icon=hazard.icon_type
         this.text=hazard.text

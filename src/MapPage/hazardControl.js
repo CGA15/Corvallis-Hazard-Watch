@@ -10,7 +10,8 @@ export default class Control {
         var temp = this.size;
         console.log("testing in control hazTypes")
         console.log(this.hazTypes)
-        // console.log(typeof hazTypes[0].created_at)
+        //console.log(typeof hazTypes[0].created_at)
+        console.log(this)
         this.container;
         this.map =map;
         if (this.size < 50) {
@@ -32,7 +33,7 @@ export default class Control {
     }
 //inserts a hazard into the list
     insert(hazard) {
-        //console.log("test")
+        ////console.log("test")
         var newHazard = new Hazard(hazard, this.map, this.hazTypes);
         if (this.current == this.size) {
             this.grow();

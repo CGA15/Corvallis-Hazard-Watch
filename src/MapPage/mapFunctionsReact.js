@@ -12,7 +12,7 @@ export default class MapFunctions {
         this.map = null;
         this.control = null;
         this.haztypes = haztypes
-        // console.log(this.hazardTypes)
+        // //console.log(this.hazardTypes)
         // this.map.on('click', (e) => this.onMapClick(e)); 
         this.setUpMap = this.setUpMap.bind(this);
         this.onMapClick = this.onMapClick.bind(this);
@@ -27,53 +27,26 @@ export default class MapFunctions {
     // initialize the map functions
     setUpMap(map,hazards) {
         this.map = map;
-        this.map.on('click', (e) => this.onMapClick(e));
+        // this.map.on('click', (e) => this.onMapClick(e));
         var hazlist = hazards
         this.setUpController(hazlist)
     }
     //calls the server to get the data points then feeds it into the array list
-    async setUpController(hazards) {
-        // try {
-            // const response = await fetch('/api/hazards');
-            // if (!response.ok) {
-            //     throw new Error(`HTTP error! Status: ${response.status}`);
-            // }
+    setUpController(hazards) {
+        
             var data = hazards
-            // const data = await response.json();
-            //console.log('Data from store:', data);
-
-            // Process the data as needed
-            // Example: Update the map based on the fetched data
-            console.log("haz types test in map functions")
-            console.log(this.haztypes)
+            
+            //console.log("haz types test in map functions")
+            //console.log(this.haztypes)
             const control = new Control(data, this.map,  this.haztypes);
-            this.control = control; // Set the control outside the function
+            this.control = control; // Set the control outside the function         
 
-            // this.map.on('zoomend', () => {
-            //     const currentZoom = this.map.getZoom();
-
-            //     if (currentZoom >= 13) {
-            //         //console.log('Zoom bound');
-            //         control.viewAll();
-            //     } else {
-            //         //console.log('Zoom bound');
-            //         control.removeAll();
-            //     }
-            // });
-
-        // } catch (error) {
-        //     console.error('Error fetching data:', error.message);
-        // }
     }
-    filter(start, end, types) {
-        //console.log("we get here")
-        //console.log(this)
+    filter(start, end, types) {        
         this.control.filter(start, end, types)
     }
     // creates a new hazard object and inserts it into the array list, then it sends it to the data base
     newHazard(lat, long, htype, time, rad) {
-        // var marker = L.marker([lat,long]).addTo(map);
-        // marker.bindPopup("<b>"+type+" reported at "+time+"<b>");
         if (rad == 0)
             rad = null
         let hazard = {
@@ -87,11 +60,9 @@ export default class MapFunctions {
             creator_id: 4,
             radius: rad
         }
-        //console.log(hazard)
         this.control.insert(hazard)
         const dispatch = useDispatch()
         dispatch(add(hazard))
-        //console.log(this.control)
         fetch('./api/addHazard', {
             method: 'POST',
             headers: {
@@ -106,7 +77,7 @@ export default class MapFunctions {
                 return response.json();
             })
             .then(data => {
-                //console.log('Server response:', data);
+                // //console.log('Server response:', data);
                 // Handle the response data as needed
             })
             .catch(error => {
@@ -138,40 +109,6 @@ export default class MapFunctions {
                         <button id="submitButton">Submit</button>
                     </div>
                 `;
-
-        //fancy style
-
-        // `<nav class="menu">
-        // <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
-        // <label class="menu-open-button" for="menu-open">
-        // <span class="lines line-1"></span>
-        // <span class="lines line-2"></span>
-        // <span class="lines line-3"></span>
-        // </label>
-
-        // <a href="#" class="menu-item blue"> <i class="fa fa-balance-scale"></i> 
-        // <div class="menu-item blue blue-content">
-        // Police</div>
-        // </a>
-        // <a href="#" class="menu-item green"> <i class="fa fa-bolt"></i>
-        // <div class="menu-item green green-content">
-        //     Weather</div> 
-        // </a>
-        // <a href="#" class="menu-item red"> <i class="fa fa-road"></i>
-        // <div class="menu-item red red-content">
-        //     Vehicle</div> 
-        // </a>
-        // <a href="#" class="menu-item purple"> <i class="fa fa-map-signs"></i>
-        // <div class="menu-item purple purple-content">
-        // POI</div>
-        // </a>
-        // <a href="#" class="menu-item lightblue"> <i class="fa fa-hourglass-start"><i>
-        // <div class="menu-item lightblue lightblue-content">
-        //     Traffic</div> 
-        // </a>
-        // </nav>`
-
-        ;
 
         L.popup()
             .setLatLng(e.latlng)
@@ -223,12 +160,8 @@ export default class MapFunctions {
     submitData(lat, long, hazardType, time, type, rad) {
         // Handle submission logic here
         alert(`Data submitted!\nLat: ${lat}\nLong: ${long}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}`);
-        //console.log(rad)
+        ////console.log(rad)
         this.newHazard(lat, long, hazardType, time, rad)
         this.map.closePopup();
     }
-
-
-
-
 }

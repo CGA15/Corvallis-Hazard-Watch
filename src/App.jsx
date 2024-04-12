@@ -40,6 +40,7 @@ const App = () => {
 
       <Routes>
         <Route path="/map" element={<MapPage />} />
+        <Route path="/map/:lat/:lon/:time" element = {<MapPage />}/>
         <Route path="/dataView" element={<DataView/>}/>
       </Routes>
     </div>

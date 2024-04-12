@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import MapFunctions from './mapFunctionsReact';
+// import MapFunctions from './mapFunctionsReact';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS for styling
 import { css } from '@emotion/react';
 // import hazardTypes from "./hazardTypes.json"
@@ -15,6 +15,8 @@ import MapPopUp from './mapPopUp';
 import { renderToString } from 'react-dom/server';
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
+import { useParams } from 'react-router-dom';
+
 
 
 
@@ -24,12 +26,12 @@ const MapPage = () => {
   const mapContainerRef = useRef(null);
   const haztypes = useSelector(selectHazTypes)
   const mapRef = useRef(null);
-  const [mapFunctions, setMapFunctions] = useState(null)
+  // const [mapFunctions, setMapFunctions] = useState(null)
   const [dropDown, setDropDown] = useState(false)
   const currentDate = new Date();
-  const twentyFourHoursAgo = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000*100 );
-  const [startDate, setStartDate] = useState(twentyFourHoursAgo.toISOString());
-  const [endDate, setEndDate] = useState(currentDate.toISOString());
+  const twentyFourHoursAgo = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000 );
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [checkList, setCheckList] = useState(false)
   const [selectedHazards, setSelectedHazards] = useState({});
   const [map, setMap] = useState(null)
@@ -38,8 +40,69 @@ const MapPage = () => {
   const hazardTypes = useSelector(selectHazTypes)
   const [controller, setController] = useState(null)
   const dispatch = useDispatch(); // Move useDispatch() outside of the component body
+  const apiKey = 'bed1848ba67a4ff12b0e3c2f5c0421fe';
+ const {lat,lon,time } = useParams();
 
 
+
+
+ // Function to request permission and get the user's location
+function getUserLocation() {
+  if (navigator.permissions) {
+    // Check if the Permissions API is supported
+    navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
+      if (permissionStatus.state === 'granted') {
+        // Permission already granted, get the user's location
+        getLocation();
+      } else if (permissionStatus.state === 'prompt') {
+        // Permission not yet granted, ask the user
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // User has granted permission, get the location
+            getLocation();
+          },
+          (error) => {
+            console.error('Error getting user location:', error.message);
+          }
+        );
+      } else {
+        // Permission denied or unavailable
+        // map.setView([44.5646, -123.2620], 15);
+
+        console.error('Geolocation permission denied or unavailable.');
+      }
+    });
+  } else {
+    // Permissions API not supported
+    // map.setView([44.5646, -123.2620], 15);
+
+    console.error('Permissions API is not supported in this browser.');
+  }
+}
+
+// Function to get the user's location
+function getLocation() {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      console.log('Latitude:', latitude);
+      console.log('Longitude:', longitude);
+      // Now you can use latitude and longitude to center your map
+      // For example, set it as the initial state in your component
+      console.log(`map.setView([${latitude}, ${longitude}], 12);`)
+      console.log(map)
+      map.setView([latitude, longitude], 14);
+      return latitude,longitude
+    },
+    (error) => {
+      // map.setView([44.5646, -123.2620], 15);
+      console.error('Error getting user location:', error.message);
+    }
+  );
+}
+
+// Call getUserLocation to initiate the process
 
 
 
@@ -88,7 +151,34 @@ const MapPage = () => {
     newHazard(lat, long, hazardType, time, rad)
     map.closePopup();
   }
-  const newHazard =  (lat, long, htype, time, rad) =>{
+  const newHazard =  async (lat, long, htype, time, rad) =>{
+    var locdata = "N/A"
+    try {
+      const limit = 1;
+      const response = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=${limit}&appid=${apiKey}`);
+      const location = await response.json();
+      console.log(location);
+      if(location[0] && location[0].country && location[0].country === "US")
+            {
+                const locString = `${location[0].name},${location[0].state}, ${location[0].country}`
+                locdata=locString;
+                 // put(hazards[i], hazards[i].id)
+            }
+            else
+            {
+                if(location[0] && location[0].country)
+                {
+                    const locString = `${location[0].name}, ${location[0].country}`
+                    locdata=locString;
+                }
+                else{
+                    locdata="N/A";
+                }
+            }
+      } catch (error) {
+          console.error(error);
+          throw new Error('Error fetching location data');
+      }
     if (rad == 0)
         rad = null
     let hazard = {
@@ -100,7 +190,8 @@ const MapPage = () => {
         text: "dummy",  
         image: null,
         creator_id: 4,
-        radius: rad
+        radius: rad,
+        location: locdata
     }
     console.log(controller)
     controller.insert(hazard)
@@ -130,6 +221,7 @@ const MapPage = () => {
         });
 
 }
+
   // Define the onMapClick function
   const onMapClick = (e) => {
     //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
@@ -184,7 +276,21 @@ const MapPage = () => {
         // Check if the map is already initialized
         if (!mapContainerRef.current._leaflet_id) {
           // Create a Leaflet map with an initial view
-          setMap(L.map(mapContainerRef.current).setView([44.5646, -123.2620], 15));
+        if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)) && !isNaN(parseFloat(time))) {
+            console.log("they are numbers")
+            const newStart = new Date(parseFloat(time)- 24 * 60 * 60 * 1000)
+            const newEnd = new Date(parseFloat(time)+ 24 * 60 * 60 * 1000)
+            setStartDate(newStart.toISOString())
+            setEndDate(newEnd.toISOString())
+            setMap(L.map(mapContainerRef.current).setView([parseFloat(lat), parseFloat(lon)], 18));
+
+        } else {
+          console.log("they arent numbers", typeof lat)
+          setStartDate(twentyFourHoursAgo.toISOString())
+          setEndDate(currentDate.toISOString())
+          setMap(L.map(mapContainerRef.current).setView([44.564568,-123.262047], 15));
+        }
+          // setMap(L.map(mapContainerRef.current).setView([44.5646, -123.2620], 15));
 
           // Add a tile layer to the map        
         }
@@ -212,6 +318,8 @@ const MapPage = () => {
      
       const controller = new Control(hazards,map,hazardTypes)
       setController(controller)
+      if(isNaN(parseFloat(lat)))
+        getUserLocation()
       console.log("check",controller)
 
 
@@ -221,9 +329,26 @@ const MapPage = () => {
   }, [map, setUpOnce])
   useEffect (() => {
     if(controller)
+    {
       map.on('click', (e) => onMapClick(e))
+      var start
+      var endTime
+      if (!isNaN(parseFloat(time))) {
+         start = new Date(parseFloat(time) - 24 * 60 * 60 * 1000)
+         endTime =new Date(parseFloat(time) + 24 * 60 * 60 * 1000)
+      } 
+      else
+      {
+        start = twentyFourHoursAgo;
+        endTime = currentDate
+      }
+      console.log("start",start)
+      console.log("end",endTime)
+      controller.filter(start,endTime,"All")
+    }
     
   }, [controller])
+
   const openFilters = () => {
     setDropDown(!dropDown)
 
@@ -274,7 +399,7 @@ const MapPage = () => {
       <div css={filterBox}>
         {/* <button onClick={openFilters}>Filters</button> */}
         {/* {dropDown && ( */}
-        <div>
+        {startDate && endDate &&( <div>
           Start Date:
           <input
             type='date'
@@ -310,7 +435,8 @@ const MapPage = () => {
             )}
           </div>
           <button onClick={submitFilters}>Submit</button>
-        </div>
+        </div>)}
+       
         {/* )} */}
 
       </div>

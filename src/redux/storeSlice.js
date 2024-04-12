@@ -23,9 +23,10 @@ const storeSlice = createSlice({
   reducers: {
     add(state, action) {
       const newItem = action.payload;
-      console.log(newItem)
-      console.log("added itmes",state)
-      state.push({...newItem});
+      const maxId = Math.max(...state.map(item => item.id), 0); // Find the maximum ID
+      newItem.id = maxId + 1; // Set the new item's ID to 1 more than the maximum ID
+      console.log("newItem",newItem)
+      state.push(newItem);
     },
   },
   extraReducers: (builder) => {

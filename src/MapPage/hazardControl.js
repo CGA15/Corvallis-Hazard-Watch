@@ -29,7 +29,7 @@ export default class Control {
         }
         this.currentDate= new Date()
         var twentyFourHoursAgo = new Date(this.currentDate.getTime() - (24 * 60 * 60 * 1000))
-        this.filter(twentyFourHoursAgo,this.currentDate,"All")
+        // this.filter(twentyFourHoursAgo,this.currentDate,"All")
     }
 //inserts a hazard into the list
     insert(hazard) {
@@ -66,6 +66,8 @@ export default class Control {
     }
 // Filter, this function will reset all filters, then run filter by time and filter by type
     filter(minDate,maxDate,type){
+        console.log("filter called" ,minDate, maxDate, type)
+        console.log("self", this)
         this.viewAll()
         this.filterByTime(minDate,maxDate)
         this.filterByType(type)

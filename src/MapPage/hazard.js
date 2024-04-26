@@ -1,4 +1,4 @@
-import types from "./hazardTypes.json"
+// import types from "./hazardTypes.json"
 export default class Hazard {
     constructor(hazard,map,haztypes){
         this.lat=hazard.latitude
@@ -7,13 +7,14 @@ export default class Hazard {
         this.types = haztypes
         this.long=hazard.longitude
         this.type=this.types.find(type => type.id === hazard.type)?.name || "Other";
-        this.icon=hazard.icon_type
+        this.icon=this.types.find(type => type.id === hazard.type)?.icon || null;
         this.text=hazard.text
         this.image=hazard.image
         this.radius=hazard.radius
         this.marker=null
         this.map=map
         this.visible=false
+        this.location= hazard.location
         this.show()
         
     }
@@ -39,6 +40,9 @@ export default class Hazard {
             this.marker.remove()
             this.visible=false  ;
         }
+    }
+    isVisible(){
+        return this.visible
     }
     //adds itself to the map
     show(){
@@ -76,7 +80,7 @@ export default class Hazard {
                 }
             }
             this.marker.addTo(this.map);
-            this.marker.bindPopup("<b>"+this.type+" reported at "+this.date+"<b>");
+            this.marker.bindPopup("<b>"+this.type+" reported at "+this.date+"<b>\n<p> Description: "+this.text+"</p>");
             this.visible=true;
 
         }

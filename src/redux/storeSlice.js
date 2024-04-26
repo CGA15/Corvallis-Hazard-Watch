@@ -1,4 +1,3 @@
-// storeSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const FileLocation = "/api/hazards";
@@ -7,10 +6,7 @@ export const fetchData = createAsyncThunk('store/fetchData', async () => {
   try {
     const response = await fetch(FileLocation);
     const data = await response.json();
-    ////console.log("data from redux fetch")
-    ////console.log(data.data);
-    //console.log("data from file")
-    return data.data;
+    return { data: data.data, fetchedAt: Date.now() }; // Include the fetchedAt timestamp
   } catch (error) {
     console.error('Error fetching data:', error);
     throw error;
@@ -19,31 +15,24 @@ export const fetchData = createAsyncThunk('store/fetchData', async () => {
 
 const storeSlice = createSlice({
   name: "items",
-  initialState: [],
+  initialState: { items: [], fetchedAt: null }, // Initial state includes items array and fetchedAt timestamp
   reducers: {
     add(state, action) {
       const newItem = action.payload;
-      const maxId = Math.max(...state.map(item => item.id), 0); // Find the maximum ID
-      newItem.id = maxId + 1; // Set the new item's ID to 1 more than the maximum ID
-      console.log("newItem",newItem)
-      state.push(newItem);
+      const maxId = Math.max(...state.items.map(item => item.id), 0);
+      newItem.id = maxId + 1;
+      state.items.push(newItem);
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
-      
-      return action.payload.map(item => ({ ...item}));
+      state.items = action.payload.data.map(item => ({ ...item}));
+      state.fetchedAt = action.payload.fetchedAt; // Update fetchedAt timestamp
     });
   },
 });
 
 export default storeSlice.reducer;
 export const { add } = storeSlice.actions;
-export const selectItems = storeSlice.selectSlice;
-
-export function selectStore(state) {
-  ////console.log(`state = ${state}`);
-  const items = selectItems(state);
-  ////console.log(`== items ${items}`);
-  return items;
-}
+export const selectStore = state => state.items.items; // Adjust selector for nested state
+export const selectFetchedAt = state => state.items.fetchedAt; // Selector for fetchedAt timestamp

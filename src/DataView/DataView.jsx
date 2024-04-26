@@ -14,6 +14,7 @@
       const [hazardsData, setHazardsData] = useState([])
       const hazardTypes = useSelector(selectHazTypes)
       const currentDate = new Date();
+      const [search, setSearch] = useState()
       const twentyFourHoursAgo = new Date(currentDate.getTime() - 3*31*24 * 60 * 60 * 1000);  
       const [startDate, setStartDate] = useState(twentyFourHoursAgo.toISOString());
       const [endDate, setEndDate] = useState(currentDate.toISOString()); 
@@ -81,6 +82,8 @@
         
           hazardsFilter = filterByTime(minDate,maxDate,hazardsFilter)
           hazardsFilter = filterByType(type,hazardsFilter)
+          if(search && search.length>0)
+            hazardsFilter = filterByName(hazardsFilter)
           const sortedHazards = [...hazardsFilter].sort((a, b) => {
               return new Date(b.created_at) - new Date(a.created_at);
           });
@@ -91,6 +94,26 @@
       //         this.container[i].show();
       //     }
       // }
+      const filterByName = (hazards) => {
+        var locationData = search.split(',').map(item => item.trim().toLowerCase());
+        
+        hazards = hazards.filter(item => {
+          var locationData2 = item.location.split(',').map(item => item.trim().toLowerCase());
+          let matches = 0;
+      
+          locationData.forEach(searchItem => {
+            locationData2.forEach(hazardItem => {
+              if (searchItem === hazardItem) {
+                matches++;
+              }
+            });
+          });
+      
+          return matches >= locationData.length;
+        });
+        return hazards
+      }
+      
       const filterByTime = (min,max, hazards) =>{
           // console.log(hazardsData[0])
           hazards = hazards.filter(item => new Date(item.created_at).getTime() > min.getTime() && new Date(item.created_at).getTime() < max.getTime());
@@ -141,6 +164,7 @@
 
       return (
           <div>
+              <input type="text" placeholder="EX: Corvallis, Oregon, US" onChange={(e) => setSearch(e.target.value)}/>
               <div>
               Start Date:
               <input

@@ -10,4 +10,8 @@ const LoginButton = () => {
   return <button onClick={() => logout({logoutParams: {returnTo: window.location.origin,}})}>Log <output></output></button>;
 };
 
+<<<<<<< Updated upstream
 export default LoginButton;
+=======
+export default LoginButton;3
+>>>>>>> Stashed changes

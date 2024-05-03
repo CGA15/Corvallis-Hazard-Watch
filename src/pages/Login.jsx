@@ -2,12 +2,22 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import Auth0LoginLink from '../components/Auth0LoginLink'
+import LoginButton from '../components/LoginButton'
+import LogoutButton from '../components/LogoutButton'
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Auth0Login() {
   const [ error, setError ] = useState("")
   const [ searchParams, setSearchParams ] = useSearchParams()
   const [ success, setSuccess ] = useState(false)
   const authCode = searchParams.get("code")
+
+  const {
+    user,
+    isAuthenticated,
+    loginWithRedirect,
+    logout,
+  } = useAuth0();
 
   console.log("== authCode:", authCode)
   useEffect(() => {
@@ -33,7 +43,13 @@ export default function Auth0Login() {
   return (
     <div>
       {error && <p>Error: {error}</p>}
-      {success ? <p>Success!</p> : <Auth0LoginLink />}
+      {!isAuthenticated && (
+        <LoginButton />
+      )}
+      {isAuthenticated && (
+        <LogoutButtonButton />
+      )}
+      {success ? <p>Success!</p> : <LoginButton />}
     </div>
   )
 }

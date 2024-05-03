@@ -8,10 +8,9 @@ import { css } from '@emotion/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectStore, selectFetchedAt, fetchData } from '../redux/storeSlice';
 import { selectHazTypes } from '../redux/hazTypesRedux';
+import { selectIcons } from '../redux/iconSlice';
 import Control from './hazardControl';
-import hazardTypesJson from './hazardTypes.json'
 import { add } from '../redux/storeSlice'
-import MapPopUp from './mapPopUp';
 import { renderToString } from 'react-dom/server';
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
@@ -25,7 +24,7 @@ import { useParams } from 'react-router-dom';
 const MapPage = () => {
   const dataAge= useSelector(selectFetchedAt)
   const mapContainerRef = useRef(null);
-  const haztypes = useSelector(selectHazTypes)
+  // const haztypes = useSelector(selectHazTypes)
   const mapRef = useRef(null);
   // const [mapFunctions, setMapFunctions] = useState(null)
   const [dropDown, setDropDown] = useState(false)
@@ -39,6 +38,11 @@ const MapPage = () => {
   const [setUpOnce, setSetUpOnce] = useState(false)
   const hazards = useSelector(selectStore)
   const hazardTypes = useSelector(selectHazTypes)
+  const icons = useSelector(selectIcons)
+  console.log("hazards" , hazards)
+  console.log("hazardTypes" , hazardTypes)
+  console.log("icons" , icons)
+
   const [controller, setController] = useState(null)
   const dispatch = useDispatch(); // Move useDispatch() outside of the component body
   const apiKey = 'bed1848ba67a4ff12b0e3c2f5c0421fe';
@@ -150,9 +154,17 @@ function getLocation() {
   //function for when you click the submit button. 
   function submitData(lat, long, hazardType, time, type, rad, text) {
     // Handle submission logic here
-    alert(`Data submitted!\nLat: ${lat}\nLong: ${long}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}\nText: ${text}`);
     //////console.log(rad)
-    newHazard(lat, long, hazardType, time, rad ,text)
+    // console.log(typeof lat, lat)
+    // console.log(typeof long, long)
+    let lat2=lat - Math.floor((lat+90)/180)*180
+    let long2=long - Math.floor((long+180)/360)*360
+    map.setView([lat2,long2],13)
+    // console.log(typeof lat2, lat2)
+    // console.log(typeof long2, long2)
+    // alert(`Data submitted!\nLat: ${lat2}\nLong: ${long2}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}\nText: ${text}`);
+
+    newHazard(lat2, long2, hazardType, time, rad ,text)
     map.closePopup();
   }
   const newHazard =  async (lat, long, htype, time, rad, textContent) =>{
@@ -280,7 +292,7 @@ function getLocation() {
   }
   useEffect(() => {
     if(update && hazards.length!=length && controller){
-      console.log("update called")
+      // console.log("update called")
       const start = new Date(startDate);
       const end = new Date(endDate);
       var hazardsTypes = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
@@ -342,7 +354,7 @@ function getLocation() {
       }).addTo(map);
       mapRef.current = map;
      
-      const controller = new Control(hazards,map,hazardTypes,apiKey)
+      const controller = new Control(hazards,map,hazardTypes,apiKey, icons)
       setLength(hazards.length)
       setController(controller)
       if(isNaN(parseFloat(lat)))
@@ -358,9 +370,9 @@ function getLocation() {
   useEffect (() => {
     if(controller)
     {
-      if(Date.now() - dataAge > 5*1000)
+      if(Date.now() - dataAge > 5*1000*60)
       {
-        console.log("data too old")
+        // console.log("data too old")
         getData()
        
       }

@@ -1,0 +1,27 @@
+[
+    {
+        "id" : 100,
+        "iconUrl": "/assets/icons/marker-icon.png",
+        "shadowUrl": "/assets/icons/marker-shadow.png",
+        "iconSize": [
+            25,
+            41
+        ],
+        "shadowSize": [
+            41,
+            41
+        ],
+        "iconAnchor": [
+            12,
+            41
+        ],
+        "shadowAnchor": [
+            12,
+            41
+        ],
+        "popupAnchor": [
+            -3,
+            -41
+        ]
+    }
+]

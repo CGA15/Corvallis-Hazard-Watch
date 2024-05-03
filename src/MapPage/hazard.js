@@ -1,18 +1,37 @@
+// import types from "./hazardTypes.json"
 export default class Hazard {
-    constructor(hazard,map){
+    constructor(hazard,map,haztypes){
         this.lat=hazard.latitude
-        this.date = hazard.created_at
+        this.dateObject = hazard.created_at
+        this.date=this.dateObject.toLocaleString()
+        this.types = haztypes
         this.long=hazard.longitude
-        this.type=hazard.type
-        this.icon=hazard.icon_type
+        this.type=this.types.find(type => type.id === hazard.type)?.name || "Other";
+        this.icon=this.types.find(type => type.id === hazard.type)?.icon || null;
         this.text=hazard.text
         this.image=hazard.image
         this.radius=hazard.radius
         this.marker=null
         this.map=map
         this.visible=false
+        this.location= hazard.location
         this.show()
         
+    }
+    convertIsoToCustomFormat(isoString) {
+        const dateTime = new Date(isoString);
+        
+        // Extract components
+        const month = dateTime.getMonth() + 1; // Months are zero-based
+        const day = dateTime.getDate();
+        const year = dateTime.getFullYear();
+        const hours = dateTime.getHours();
+        const minutes = dateTime.getMinutes();
+    
+        // Format the components
+        const customFormat = `${month}/${day}/${year}, ${hours}:${minutes}`;
+    
+        return customFormat;
     }
     //removes itself from map
     remove(){
@@ -21,6 +40,9 @@ export default class Hazard {
             this.marker.remove()
             this.visible=false  ;
         }
+    }
+    isVisible(){
+        return this.visible
     }
     //adds itself to the map
     show(){
@@ -58,7 +80,7 @@ export default class Hazard {
                 }
             }
             this.marker.addTo(this.map);
-            this.marker.bindPopup("<b>"+this.type+" reported at "+this.date+"<b>");
+            this.marker.bindPopup("<b>"+this.type+" reported at "+this.date+"<b>\n<p> Description: "+this.text+"</p>");
             this.visible=true;
 
         }

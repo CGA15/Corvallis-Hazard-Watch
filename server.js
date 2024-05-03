@@ -70,7 +70,7 @@
             const { data, error } = await supabase
                 .from('hazards')
                 .insert([
-                    { type: req.body.type, latitude: req.body.latitude, longitude: req.body.longitude, text: req.body.text, creator_id: req.body.creator_id, radius: req.body.radius},
+                    { type: req.body.type, latitude: req.body.latitude, longitude: req.body.longitude, text: req.body.text, creator_id: req.body.creator_id, radius: req.body.radius, location: req.body.location},
                 ])
                 .select()
 

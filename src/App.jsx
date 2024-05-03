@@ -13,12 +13,17 @@ import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
 
 import { fetchData} from './redux/storeSlice'
+import { fetchIcons } from './redux/iconSlice';
+import { fetchTypes } from './redux/hazTypesRedux';
 
 //In order to add new pages, make new routes. and new Links
 const App = () => {
   const dispatch = useDispatch();
     useEffect(() =>{
+        dispatch(fetchIcons());
+        dispatch(fetchTypes());
         dispatch(fetchData());
+        
     },[dispatch])
 
   const NavHeader = styled.h1`

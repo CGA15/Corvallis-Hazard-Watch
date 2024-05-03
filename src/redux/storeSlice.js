@@ -8,7 +8,7 @@ export const fetchData = createAsyncThunk('store/fetchData', async () => {
     const data = await response.json();
     return { data: data.data, fetchedAt: Date.now() }; // Include the fetchedAt timestamp
   } catch (error) {
-    console.error('Error fetching data:', error);
+    // console.error('Error fetching data:', error);
     throw error;
   }
 });

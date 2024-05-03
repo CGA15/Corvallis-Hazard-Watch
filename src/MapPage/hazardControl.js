@@ -2,8 +2,9 @@ import Hazard from './hazard'; // Import Hazard if it's in a separate module
 
 //This is an array list object
 export default class Control {
-    constructor(hazardList, map, haztypes, api) {
+    constructor(hazardList, map, haztypes, api, icons) {
         this.hazardList = hazardList
+        this.icons = icons
         this.hazTypes = haztypes
         this.size = hazardList.length;
         this.current = 0;
@@ -38,7 +39,7 @@ export default class Control {
     //inserts a hazard into the list
     insert(hazard) {
         //////console.log("test")
-        var newHazard = new Hazard(hazard, this.map, this.hazTypes);
+        var newHazard = new Hazard(hazard, this.map, this.hazTypes, this.icons);
         if (this.current == this.size) {
             this.grow();
         }
@@ -53,7 +54,7 @@ export default class Control {
         //     this.insert(element)
         // });
         // delete this.container
-        console.log(this.container)
+        // console.log(this.container)
         this.container = new Array(2 * newhazardList.length)
         let temp = newhazardList.length
         this.current = 0;
@@ -113,7 +114,7 @@ export default class Control {
                 this.filteredData.push(this.container[i])
             }
         }
-        console.log(this.filteredData)
+        // console.log(this.filteredData)
         if(this.grouped)
         {
             this.grouped=false
@@ -198,7 +199,7 @@ export default class Control {
             Promise.all(fetchPromises)
                 .then(() => {
                     // All fetch requests have completed
-                    console.log(this.groupedContainer);
+                    // console.log(this.groupedContainer);
                     this.groupedContainer.forEach(item => {
                         if(item[2]!=="loc")
                         {

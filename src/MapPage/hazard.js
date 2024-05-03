@@ -1,13 +1,16 @@
 // import types from "./hazardTypes.json"
 export default class Hazard {
-    constructor(hazard,map,haztypes){
+    constructor(hazard,map,haztypes,icons){
         this.lat=hazard.latitude
         this.dateObject = hazard.created_at
         this.date=this.dateObject.toLocaleString()
         this.types = haztypes
+        this.icons = icons
+        // console.log("icons in hazard",icons)
+        // console.log("haztypes in hazard",haztypes)
         this.long=hazard.longitude
         this.type=this.types.find(type => type.id === hazard.type)?.name || "Other";
-        this.icon=this.types.find(type => type.id === hazard.type)?.icon || null;
+        this.icon=icons.find(type => type.id === hazard.type) || icons.find(type=> type.id ===100);
         this.text=hazard.text
         this.image=hazard.image
         this.radius=hazard.radius
@@ -64,18 +67,19 @@ export default class Hazard {
                 else{   
                     
                     //format to create a custon icon for popups
-                    if(this.icon === null) {
+                    // if(this.icon === null) {
+
+                    
                         var standardIcon = L.icon({
-                            iconUrl: '/assets/icons/marker-icon.png',
-                            shadowUrl: '/assets/icons/marker-shadow.png',
-                        
-                            iconSize:     [25, 41], // size of the icon
-                            shadowSize:   [41, 41], // size of the shadow
-                            iconAnchor:   [12, 41], // point of the icon which will correspond to marker's location
-                            shadowAnchor: [12, 41],  // the same for the shadow
-                            popupAnchor:  [-3, -41] // point from which the popup should open relative to the iconAnchor
+                            iconUrl: this.icon.iconUrl,
+                            shadowUrl: this.icon.shadowUrl,                        
+                            iconSize:this.icon.iconSize, // size of the icon
+                            shadowSize:  this.icon.shadowSize, // size of the shadow
+                            iconAnchor:  this.icon.iconAnchor, // point of the icon which will correspond to marker's location
+                            shadowAnchor: this.icon.shadowAnchor,  // the same for the shadow
+                            popupAnchor:  this.icon.popupAnchor // point from which the popup should open relative to the iconAnchor
                         });
-                    }
+                    // }
                     this.marker=L.marker([this.lat,this.long],{icon: standardIcon})
                 }
             }

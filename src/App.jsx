@@ -5,6 +5,9 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import MapPage from './MapPage/MapPage'; // Adjust the import path as needed
+import Login from './pages/Login'
+import { Auth0Provider } from '@auth0/auth0-react';
+import Auth0ProviderWithHistory from './auth0Provider';
 import DataView from './DataView/DataView';
 import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
@@ -29,12 +32,15 @@ const App = () => {
   background: lightslategrey;
   `
   return (
+
     <Router>
+     <Auth0ProviderWithHistory>
     <div>
       <nav className='navBar'>
         <NavHeader>
           <LinkContainer><Link to="/map">Map</Link></LinkContainer>
           <LinkContainer><Link to="/dataView">Data View</Link></LinkContainer>
+          <LinkContainer><Link to="/login">Login</Link></LinkContainer>
         </NavHeader>
       </nav>
 
@@ -42,10 +48,17 @@ const App = () => {
         <Route path="/map" element={<MapPage />} />
         <Route path="/map/:lat/:lon/:time" element = {<MapPage />}/>
         <Route path="/dataView" element={<DataView/>}/>
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
+    </Auth0ProviderWithHistory>
   </Router>
+
   );
 };
 
 export default App;
+
+
+
+

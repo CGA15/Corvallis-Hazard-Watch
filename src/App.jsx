@@ -11,6 +11,7 @@ import Auth0ProviderWithHistory from './auth0Provider';
 import DataView from './DataView/DataView';
 import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
+import Home from './homepage/home'
 
 import { fetchData} from './redux/storeSlice'
 import { fetchIcons } from './redux/iconSlice';
@@ -41,6 +42,26 @@ const App = () => {
     <Router>
      <Auth0ProviderWithHistory>
     <div>
+      <header>
+            <img class="logo-mini" src="public\assets\icons\hazardlogo.png" />
+            <nav>
+                <ul class="links">
+                    <li>
+                    </li>
+
+                    <a><Link to="/">Home</Link></a>
+                    <li>
+                        <a href="#" title="About"> About</a>
+                    </li>
+                    <li>
+                        <a href="#" class="contact" title=" Contact ">Contact Us</a>
+                    </li>
+                    <li class="login ">
+                        <a class=" btn " href="# " title="Register / Log In ">Register/Log In</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
       <nav className='navBar'>
         <NavHeader>
           <LinkContainer><Link to="/map">Map</Link></LinkContainer>
@@ -50,6 +71,7 @@ const App = () => {
       </nav>
 
       <Routes>
+        <Route path ="/" element={<Home/>}></Route>
         <Route path="/map" element={<MapPage />} />
         <Route path="/map/:lat/:lon/:time" element = {<MapPage />}/>
         <Route path="/dataView" element={<DataView/>}/>

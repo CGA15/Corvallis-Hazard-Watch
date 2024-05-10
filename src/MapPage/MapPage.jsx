@@ -157,9 +157,10 @@ function getLocation() {
     //////console.log(rad)
     // console.log(typeof lat, lat)
     // console.log(typeof long, long)
-    let lat2=lat - Math.floor((lat+90)/180)*180
+    if(long<-180 || long >180)
+    {let lat2=lat - Math.floor((lat+90)/180)*180
     let long2=long - Math.floor((long+180)/360)*360
-    map.setView([lat2,long2],13)
+    map.setView([lat2,long2],13)} 
     // console.log(typeof lat2, lat2)
     // console.log(typeof long2, long2)
     // alert(`Data submitted!\nLat: ${lat2}\nLong: ${long2}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}\nText: ${text}`);
@@ -171,7 +172,7 @@ function getLocation() {
     var locdata = "N/A"
     try {
       const limit = 1;
-      const response = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=${limit}&appid=${apiKey}`);
+      const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=${limit}&appid=${apiKey}`);
       const location = await response.json();
       //console.log(location);
       if(location[0] && location[0].country && location[0].country === "US")

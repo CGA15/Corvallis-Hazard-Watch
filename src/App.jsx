@@ -11,6 +11,7 @@ import Auth0ProviderWithHistory from './auth0Provider';
 import DataView from './DataView/DataView';
 import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
+import { withAuth0 } from "@auth0/auth0-react";
 
 import { fetchData} from './redux/storeSlice'
 import { fetchIcons } from './redux/iconSlice';
@@ -18,6 +19,12 @@ import { fetchTypes } from './redux/hazTypesRedux';
 
 //In order to add new pages, make new routes. and new Links
 const App = () => {
+  const { isLoading } = withAuth0();
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
   const dispatch = useDispatch();
     useEffect(() =>{
         dispatch(fetchIcons());

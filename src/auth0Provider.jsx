@@ -12,13 +12,12 @@ const Auth0ProviderWithHistory = ({ children }) => {
 
     const domain = "dev-6m2d6yf4ffilgk3i.us.auth0.com";//import.meta.env.REACT_APP_AUTH0_DOMAIN;
     const clientId = "kzqh8vmwcVoVFm5ipNO8rxmYsjMg8950";//import.meta.env.REACT_APP_AUTH0_CLIENT_ID;
+    
 
     //const domain = process.env.REACT_APP_AUTH0_DOMAIN;//import.meta.env.REACT_APP_AUTH0_DOMAIN;
    // const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;//import.meta.env.REACT_APP_AUTH0_CLIENT_ID;
 
-    //print domain and client id to console
-    console.log("== domain:", domain)
-    console.log("== clientId:", clientId)
+
 
     const history = useNavigate();
 

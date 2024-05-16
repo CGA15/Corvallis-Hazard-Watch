@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react';
+
 import { Provider } from 'react-redux'
 
 
@@ -33,6 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Provider store ={store}>
             <App />
         </Provider>
-    
+
     </React.StrictMode>,
 )

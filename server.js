@@ -85,16 +85,37 @@
         }
     });
 
-    app.post('/sensor', async (req, res) => {
+    app.post('/api/sensor', async (req, res) => {
         try {
             // Check if the request contains the required fields
-            if (!req.body.hasOwnProperty('lat') || !req.body.hasOwnProperty('long') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('long')) {
+            if (!req.body.hasOwnProperty('lat') || !req.body.hasOwnProperty('long') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('status')) {
                 return res.status(400).json({ message: "Missing required fields" });
+            }
+
+            if (req.body.status != 0 || req.body.status != 1){
+                return res.status(400).json({ message: "Status field must equal 0 or 1 only"})
+            }
+
+            // grabbing current time to fill last_updated field
+            const time = new Date();
+            // formatting the time value
+            const timeHolder = time.toISOString();
+
+            const { data, error } = await supabase
+                .from('sensor')
+                .insert([
+                    { last_updated: timeHolder, latitude: req.body.lat, longitude: req.body.long, sensor_name: req.body.name, sensor_status: req.body.status },
+                ])
+                .select()
+
+            if (error) {
+                throw error;
             }
             
             // Implement your logic here to handle the sensor data
             // For now, let's return a message indicating that this functionality is not yet implemented
-            return res.status(501).json({ message: "This functionality is not yet implemented" });
+            //return res.status(501).json({ message: "This functionality is not yet implemented" });
+            return res.status(204).json({ message: 'corny' });
         } catch (error) {
             console.error("Error processing sensor data:", error);
             return res.status(500).json({ message: "Internal server error" });

@@ -71,6 +71,26 @@ const App = () => {
 
 export default App;
 
+/*
+            <Nav>
+            <ul className="links">
+              <li className="start">
+                <StyledLink to="/" title="Home">Home</StyledLink>
+              </li>
+              <li>
+                <StyledLink to="/map" title="Map">Map</StyledLink>
+              </li>
+              <li>
+                <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
+              </li>
+              <li className="login">
+                <ButtonLink to="/login" className="btn" title="Register/Sign-In">Register/Sign-In</ButtonLink>
+              </li>
+            </ul>
+            </Nav>
+
+*/
+
 
 
 

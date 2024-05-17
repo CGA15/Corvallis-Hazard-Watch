@@ -15,6 +15,7 @@ import { renderToString } from 'react-dom/server';
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { useParams } from 'react-router-dom';
+import badWordsFilter from 'bad-words'
 
 
 
@@ -22,6 +23,7 @@ import { useParams } from 'react-router-dom';
 
 //This is the react page for the map page 
 const MapPage = () => {
+  var popup
   const dataAge= useSelector(selectFetchedAt)
   const mapContainerRef = useRef(null);
   // const haztypes = useSelector(selectHazTypes)
@@ -120,9 +122,9 @@ function getLocation() {
     const htmlString = renderToString(component);
     return htmlString;
   }
-  function updatePopupContent() {
-    var circleRadio = document.getElementById('circleRadio');
-    var radiusSlider = document.getElementById('radiusSlider');
+  function updatePopupContent(randomNum) {
+    var circleRadio = document.getElementById(`circleRadio${randomNum}`);
+    var radiusSlider = document.getElementById(`radiusSlider${randomNum}`);
 
     if (circleRadio.checked) {
       radiusSlider.style.display = 'block';
@@ -131,14 +133,14 @@ function getLocation() {
     }
   }
   // returns the selected data type that was selected
-  function getHazardType() {
-    var pointRadio = document.getElementById('pointRadio');
+  function getHazardType(randomNum) {
+    var pointRadio = document.getElementById(`pointRadio${randomNum}`);
     return pointRadio.checked ? 'Point' : 'Circle';
   }
   // returns radius from radius slider.
-  function getRadius() {
-    var circleRadio = document.getElementById('circleRadio');
-    var radiusSlider = document.getElementById('radius');
+  function getRadius(randomNum) {
+    var circleRadio = document.getElementById(`circleRadio${randomNum}`);
+    var radiusSlider = document.getElementById(`radius${randomNum}`);
 
     if (circleRadio.checked) {
       return radiusSlider.value;
@@ -152,22 +154,88 @@ function getLocation() {
     map.closePopup();
   }
   //function for when you click the submit button. 
-  function submitData(lat, long, hazardType, time, type, rad, text) {
+  function submitData(lat, long, hazardType, time, type, rad, text, popup,randomNum) {
     // Handle submission logic here
     //////console.log(rad)
     // console.log(typeof lat, lat)
     // console.log(typeof long, long)
+    const badLength = document.getElementById(`bad-length${randomNum}`)
+    var badWordsCaught= document.getElementById(`bad-words${randomNum}`)
+    badWordsCaught.style.display ='none'
+    badLength.style.display ='none'
+
+    const filter = new badWordsFilter 
     if(long<-180 || long >180)
-    {let lat2=lat - Math.floor((lat+90)/180)*180
-    let long2=long - Math.floor((long+180)/360)*360
-    map.setView([lat2,long2],13)} 
+    {
+      var lat=lat - Math.floor((lat+90)/180)*180
+      var long=long - Math.floor((long+180)/360)*360
+      map.setView([lat,long],13)
+    } 
     // console.log(typeof lat2, lat2)
     // console.log(typeof long2, long2)
     // alert(`Data submitted!\nLat: ${lat2}\nLong: ${long2}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}\nText: ${text}`);
+    if (text.length >200){
+      const badLengthValue = document.getElementById(`bad-length-value${randomNum}`)
+      badLength.style.display ='block'
+      badLengthValue.textContent= text.length-200 +" characters over the limit"
+      const mapSize = map.getSize();
+      const latlng = { lat: lat, lng: long };
+      const mapBounds = map.getBounds();
 
-    newHazard(lat2, long2, hazardType, time, rad ,text)
-    map.closePopup();
+        // Calculate the vertical offset in pixels from the bottom
+      const offsetY = 0//mapSize.y/2;
+
+        // Convert the offset to geographical units
+      const latLngBottomPoint = map.containerPointToLatLng([mapSize.x / 2, mapSize.y - offsetY]);
+
+        // Calculate the new center latitude
+      const centerLat = latlng.lat - (latLngBottomPoint.lat - mapBounds.getCenter().lat);
+        
+        // Pan the map to the new center
+      map.panTo([centerLat, latlng.lng]);
+    }
+    else if (filter.isProfane(text))
+    {
+      const badWords = findCensoredWords(text, filter.clean(text));
+      var badWordsId = document.getElementById(`bad-words-found${randomNum}`)     
+      badWordsId.textContent=badWords;    
+      badWordsCaught.style.display ='block'
+      const mapSize = map.getSize();
+      const latlng = { lat: lat, lng: long };
+      const mapBounds = map.getBounds();
+
+        // Calculate the vertical offset in pixels from the bottom
+      const offsetY = 0//mapSize.y/2;
+
+        // Convert the offset to geographical units
+      const latLngBottomPoint = map.containerPointToLatLng([mapSize.x / 2, mapSize.y - offsetY]);
+
+        // Calculate the new center latitude
+      const centerLat = latlng.lat - (latLngBottomPoint.lat - mapBounds.getCenter().lat);
+        
+        // Pan the map to the new center
+      map.panTo([centerLat, latlng.lng]);
+
+    }
+    else
+    {
+      newHazard(lat, long, hazardType, time, rad ,text)
+      map.closePopup();
+    }
   }
+  function findCensoredWords(original, censored) {
+    const originalWords = original.split(' ');
+    const censoredWords = censored.split(' ');
+    var result = "";
+
+    for (let i = 0; i < originalWords.length; i++) {
+        if (censoredWords[i].includes('*')) {
+            result+=originalWords[i] + " ";
+        }
+    }
+
+    return result;
+}
   const newHazard =  async (lat, long, htype, time, rad, textContent) =>{
     var locdata = "N/A"
     try {
@@ -242,48 +310,61 @@ function getLocation() {
   // Define the onMapClick function
   const onMapClick = (e) => {
     //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
+    
     ////console.log("set On Click")
 
     // L.popup()
     //   .setLatLng(e.latlng)
     //   .setContent(popupContent)
     //   .openOn(map);
+    const randomNum = Math.floor(Math.random() * 100000000) + 1;
     var popupContent = `
                     <div>
                         <h3>Please select a type of issue</h3>
-                        <select name="hazard" id="hazard">
+                        <select name="hazard" id="hazard${randomNum}">
                             ${hazardTypes.map(hazard => `
                                 <option value="${hazard.id}">${hazard.name}</option>
                             `).join('')}
                         </select>
-                        <input type="text" id="textInput" placeholder= "description"> 
-
+                        <input type="text" id="textInput${randomNum}" placeholder= "description"> 
+                        <div id ="bad-length${randomNum}" style="display:none;">
+                          <p>The text entered exceeds character limit</p>
+                          <p id = "bad-length-value${randomNum}" ></p>
+                        </div>
+                        <div id ="bad-words${randomNum}" style="display:none;">
+                          <p id ="bad-words-caught${randomNum}" >The text you attempted to submit contains a word not allowed in our service</p>
+                          <p id = "bad-words-found${randomNum}" ></p>
+                        </div>
                     </div>
                     <div>
-                        <input type="radio" name="htype" id="pointRadio"> Point<br />
-                        <input type="radio" name="htype" id="circleRadio"> Circle<br />
-                        <div id="radiusSlider" style="display:none;">
+                        <input type="radio" name="htype" id="pointRadio${randomNum}" checked> Point<br />
+                        <input type="radio" name="htype" id="circleRadio${randomNum}"> Circle<br />
+                        <div id="radiusSlider${randomNum}" style="display:none;">
                             <label for="radius">Radius:</label>
-                            <input type="range" id="radius" name="radius" min="1" max="200" value="100">
-                            <span id="radiusValue">50</span> meters
+                            <input type="range" id="radius${randomNum}" name="radius" min="1" max="200" value="100">
+                            <span id="radiusValue${randomNum}">50</span> meters
                         </div>
-                        <button id="closeButton">Close</button>
-                        <button id="submitButton">Submit</button>
+                        <button id="closeButton${randomNum}">Close</button>
+                        <button id="submitButton${randomNum}">Submit</button>
                     </div>
                 `;
 
-    L.popup()
+    popup = L.popup()
       .setLatLng(e.latlng)
       .setContent(popupContent)
       .openOn(map);
 
     // Attach event listeners after the content is added to the DOM
     //make sure to attach after, as the this operation with html elements doesnt work well.
-    document.getElementById('pointRadio').addEventListener('click', () => updatePopupContent());
-    document.getElementById('circleRadio').addEventListener('click', () => updatePopupContent());
-    document.getElementById('closeButton').addEventListener('click', () => closePopup());
-    document.getElementById('submitButton').addEventListener('click', () =>
-      submitData(e.latlng.lat, e.latlng.lng, document.getElementById('hazard').value, new Date(), getHazardType(), getRadius(),document.getElementById('textInput').value)
+    document.getElementById(`pointRadio${randomNum}`).addEventListener('click', () => updatePopupContent(randomNum));
+    document.getElementById(`circleRadio${randomNum}`).addEventListener('click', () => updatePopupContent(randomNum));
+    document.getElementById(`closeButton${randomNum}`).addEventListener('click', () => closePopup(randomNum));
+    document.getElementById(`radius${randomNum}`).addEventListener('input', () => {
+      document.getElementById(`radiusValue${randomNum}`).textContent = document.getElementById(`radius${randomNum}`).value;
+    });
+    
+    document.getElementById(`submitButton${randomNum}`).addEventListener('click', () =>
+      submitData(e.latlng.lat, e.latlng.lng, document.getElementById(`hazard${randomNum}`).value, new Date(), getHazardType(randomNum), getRadius(randomNum),document.getElementById(`textInput${randomNum}`).value, popup,randomNum)
     );
   }
 
@@ -354,6 +435,7 @@ function getLocation() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       mapRef.current = map;
+      
      
       const controller = new Control(hazards,map,hazardTypes,apiKey, icons)
       setLength(hazards.length)

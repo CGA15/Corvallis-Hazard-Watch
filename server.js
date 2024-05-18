@@ -85,7 +85,22 @@
         }
     });
 
-
+    app.post('/sensor', async (req, res) => {
+        try {
+            // Check if the request contains the required fields
+            if (!req.body.hasOwnProperty('lat') || !req.body.hasOwnProperty('long') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('long')) {
+                return res.status(400).json({ message: "Missing required fields" });
+            }
+            
+            // Implement your logic here to handle the sensor data
+            // For now, let's return a message indicating that this functionality is not yet implemented
+            return res.status(501).json({ message: "This functionality is not yet implemented" });
+        } catch (error) {
+            console.error("Error processing sensor data:", error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    });
+    
 
 
     app.get('*', function (req, res, next) {

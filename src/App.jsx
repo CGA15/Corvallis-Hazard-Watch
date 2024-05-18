@@ -12,6 +12,8 @@ import DataView from './DataView/DataView';
 import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
 import Home from './homepage/home'
+import About from './aboutpage/about'
+
 
 import { fetchData} from './redux/storeSlice'
 import { fetchIcons } from './redux/iconSlice';
@@ -62,8 +64,11 @@ const App = () => {
               <li>
                 <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
               </li>
+              <li>
+                <StyledLink to="/about" title="About">About</StyledLink>
+              </li>
               <li className="login">
-                <ButtonLink to="/login" className="btn" title="Register/Sign-In">Register/Sign-In</ButtonLink>
+                <ButtonLink to="/login" className="btn" title="Register/Sign-In"><span className="loginbtn">Login</span></ButtonLink>
               </li>
             </ul>
             </Nav>
@@ -76,6 +81,7 @@ const App = () => {
         <Route path="/map/:lat/:lon/:time" element = {<MapPage />}/>
         <Route path="/dataView" element={<DataView/>}/>
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     
     </main>

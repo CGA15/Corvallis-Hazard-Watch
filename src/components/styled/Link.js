@@ -23,12 +23,12 @@ export const ButtonLink = styled(Link)
 `
   border-radius: 20px;
   padding: 10px 20px;
-  color: #FFF;
+  color: #FFFFFF;
   background-color: #DC4405;
   cursor: pointer;
 
   &:hover {
     border-radius: 20px;
-    padding: 15px 25px;
+    padding: 12px 22px;
   }
 `;

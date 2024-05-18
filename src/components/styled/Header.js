@@ -18,17 +18,16 @@ export const Header = styled.header `
 export const Links = styled.nav `
   display: flex;
 
-  li {
-    &.start {
-      padding-right: 20vw;
-    }
+  
 
     &.btn {
       border-radius: 20px;
       padding: 10px 20px;
-      color: #FFF;
+      color: #FFFFFF;
       background-color: #DC4405;
-      cursor: pointer;
+      cursor: pointer
+    }
+      ;
 
       &:hover {
         border-radius: 20px;
@@ -45,7 +44,6 @@ export const Links = styled.nav `
       font-weight: 500;
 
       &:not(.btn):hover {
-        color: #DC4405;
         border-radius: 20px;
         padding: 10px 20px;
         color: #FFF;
@@ -67,15 +65,11 @@ export const Nav = styled.nav `
   .links {
     display: flex;
 
-    li {
-      &.start {
-        padding-right: 20vw;
-      }
 
       &.btn {
         border-radius: 20px;
         padding: 10px 20px;
-        color: #FFF;
+        color: #FFFFFF;
         background-color: #DC4405;
         cursor: pointer;
 
@@ -85,7 +79,7 @@ export const Nav = styled.nav `
         }
       }
 
-      a, ${StyledLink}, ${ButtonLink} {
+      a, ${StyledLink}{
         font-size: large;
         margin: 0px 75px 0px 0px;
         color: #5d5d5d;
@@ -94,10 +88,13 @@ export const Nav = styled.nav `
         font-weight: 500;
 
         &:not(.btn):hover {
-          color: #DC4405;
+          color: #FFFFFF;
           border-radius: 20px;
           padding: 10px 20px;
           background-color: #DC4405;
+        }
+        .btn{
+          color:#FFFFFF;
         }
       }
     }

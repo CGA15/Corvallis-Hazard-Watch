@@ -3,18 +3,28 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-
+import hazardlogo from './components/logo.png';
 import MapPage from './MapPage/MapPage'; // Adjust the import path as needed
 import Login from './pages/Login'
-import { Auth0Provider } from '@auth0/auth0-react';
-import Auth0ProviderWithHistory from './auth0Provider';
+//import Auth0Provider  from '@auth0/auth0-react';
+import Auth0ProviderWithHistory from './Auth0Provider';
 import DataView from './DataView/DataView';
 import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
+import Home from './homepage/home'
+import About from './aboutpage/about'
+
 
 import { fetchData} from './redux/storeSlice'
 import { fetchIcons } from './redux/iconSlice';
 import { fetchTypes } from './redux/hazTypesRedux';
+
+import GlobalStyle from './components/styled/Globalstyle.js';
+import { Header, LogoMini, Nav } from './components/styled/Header';
+import { Container, Info, LandingPage } from './components/styled/Container';
+import { ImageContainer } from './components/styled/Image';
+import { Button } from './components/styled/Button';
+import { StyledLink, ButtonLink } from './components/styled/Link.js';
 
 //In order to add new pages, make new routes. and new Links
 const App = () => {
@@ -37,25 +47,44 @@ const App = () => {
   background: lightslategrey;
   `
   return (
-
+    
     <Router>
      <Auth0ProviderWithHistory>
-    <div>
-      <nav className='navBar'>
-        <NavHeader>
-          <LinkContainer><Link to="/map">Map</Link></LinkContainer>
-          <LinkContainer><Link to="/dataView">Data View</Link></LinkContainer>
-          <LinkContainer><Link to="/login">Login</Link></LinkContainer>
-        </NavHeader>
-      </nav>
+    <GlobalStyle />
+        <Header>
+          <LogoMini src={hazardlogo} alt="Hazard Logo" />
+          <Nav>
+            <ul className="links">
+              <li className="start">
+                <StyledLink to="/" title="Home">Home</StyledLink>
+              </li>
+              <li>
+                <StyledLink to="/map" title="Map">Map</StyledLink>
+              </li>
+              <li>
+                <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
+              </li>
+              <li>
+                <StyledLink to="/about" title="About">About</StyledLink>
+              </li>
+              <li className="login">
+                <ButtonLink to="/login" className="btn" title="Register/Sign-In"><span className="loginbtn">Login</span></ButtonLink>
+              </li>
+            </ul>
+            </Nav>
+        </Header>
 
+  <main style={{ marginTop: '100px' }}>
       <Routes>
+        <Route path ="/" element={<Home/>}></Route>
         <Route path="/map" element={<MapPage />} />
         <Route path="/map/:lat/:lon/:time" element = {<MapPage />}/>
         <Route path="/dataView" element={<DataView/>}/>
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
       </Routes>
-    </div>
+    
+    </main>
     </Auth0ProviderWithHistory>
   </Router>
 

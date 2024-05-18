@@ -1,0 +1,307 @@
+    @import url('../node_modules/font-awesome/css/font-awesome.min.css');
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+    html {
+        box-sizing: border-box;
+    }
+    
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+    
+    body {
+        font-family: "Ubuntu", sans-serif;
+        background-color: #FAFAFA;
+        /* A cool off-white background */
+        color: #5d5d5d;
+        overflow: hidden;
+    }
+    
+    ul,
+    nav {
+        list-style: none;
+        padding: 0;
+        border-bottom: black;
+    }
+    
+    .logo-mini {
+        height: auto;
+        width: auto;
+        max-width: 300px;
+        max-height: 300px;
+    }
+    
+    header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 50px 0;
+        margin-bottom: 50px;
+    }
+    
+    header nav .links {
+        display: flex;
+    }
+    
+    .container {
+        margin-top: 100px;
+        margin-left: 10vw;
+        width: 30%;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0px;
+    }
+    
+    header nav .links li a {
+        font-size: large;
+        margin: 0px 75px 0px 0px;
+        color: #5d5d5d;
+        cursor: pointer;
+        transition: .3s;
+        font-weight: 500;
+    }
+    
+    header nav .links li a:not(.btn):hover {
+        color: #DC4405;
+        border-radius: 20px;
+        padding: 10px 20px;
+        color: #FFF;
+        background-color: #DC4405;
+    }
+    
+    header nav .links li .btn {
+        border-radius: 20px;
+        padding: 10px 20px;
+        color: #FFF;
+        background-color: #DC4405;
+    }
+    
+    header nav .links li .btn:hover {
+        border-radius: 20px;
+        padding: 15px 25px;
+    }
+    
+    header nav li .start {
+        padding-right: 20vw;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        /* Ensures there is space between the items */
+        align-items: center;
+        /* Make sure the container spans the full width */
+        width: 90%;
+        padding-right: 75px;
+        padding-top: 30px;
+    }
+    
+    .info {
+        flex-grow: 1;
+        padding-bottom: 20px;
+        margin-right: 10px;
+    }
+    
+    .image {
+        margin-left: auto;
+        align-self: center;
+        /* Vertically center the image within the flex container */
+        flex-grow: 0;
+    }
+    
+    .image img {
+        /* Target the img element inside the .image class */
+        max-height: 80vh;
+        /* Adjust this value as needed */
+        width: auto;
+        /* This will automatically adjust to maintain the aspect ratio */
+        height: auto;
+        /* Allows the browser to calculate the height based on the width */
+        margin-left: auto;
+        /* Keeps the image aligned to the right */
+        display: block;
+        /* Ensures the auto margins are effective */
+    }
+    
+    .landing-page .content .container .info h1 {
+        font-size: 50px;
+    }
+    
+    button {
+        border-radius: 20px;
+        padding: 10px 30px;
+        font-weight: bold;
+        font-size: x-large;
+        background-color: #DC4405;
+        margin-top: 30px;
+        cursor: pointer;
+        color: #FFF;
+    }
+    
+    button:hover {
+        transform: scale(1.1)
+    }
+    
+    html {
+        box-sizing: border-box;
+    }
+    
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+    
+    body {
+        font-family: "Ubuntu", sans-serif;
+        background-color: #FAFAFA;
+        /* A cool off-white background */
+        color: #5d5d5d;
+        overflow: hidden;
+    }
+    
+    ul,
+    nav {
+        list-style: none;
+        padding: 0;
+        border-bottom: black;
+    }
+    
+    .logo-mini {
+        height: auto;
+        width: auto;
+        max-width: 300px;
+        max-height: 300px;
+    }
+    
+    header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 50px 0;
+        margin-bottom: 50px;
+    }
+    
+    header nav .links {
+        display: flex;
+    }
+    
+    .container {
+        margin-top: 100px;
+        margin-left: 10vw;
+        width: 30%;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0px;
+    }
+    
+    header nav .links li a {
+        font-size: large;
+        margin: 0px 75px 0px 0px;
+        color: #5d5d5d;
+        cursor: pointer;
+        transition: .3s;
+        font-weight: 500;
+    }
+    
+    header nav .links li a:not(.btn):hover {
+        color: #DC4405;
+        border-radius: 20px;
+        padding: 10px 20px;
+        color: #FFF;
+        background-color: #DC4405;
+    }
+    
+    header nav .links li .btn {
+        border-radius: 20px;
+        padding: 10px 20px;
+        color: #FFF;
+        background-color: #DC4405;
+    }
+    
+    header nav .links li .btn:hover {
+        border-radius: 20px;
+        padding: 15px 25px;
+    }
+    
+    header nav li .start {
+        padding-right: 20vw;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        /* Ensures there is space between the items */
+        align-items: center;
+        /* Make sure the container spans the full width */
+        width: 90%;
+        padding-right: 75px;
+        padding-top: 30px;
+    }
+    
+    .info {
+        flex-grow: 1;
+        padding-bottom: 20px;
+        margin-right: 10px;
+    }
+    
+    .image {
+        margin-left: auto;
+        align-self: center;
+        /* Vertically center the image within the flex container */
+        flex-grow: 0;
+    }
+    
+    .image img {
+        /* Target the img element inside the .image class */
+        max-height: 80vh;
+        /* Adjust this value as needed */
+        width: auto;
+        /* This will automatically adjust to maintain the aspect ratio */
+        height: auto;
+        /* Allows the browser to calculate the height based on the width */
+        margin-left: auto;
+        /* Keeps the image aligned to the right */
+        display: block;
+        /* Ensures the auto margins are effective */
+    }
+    
+    .landing-page .content .container .info h1 {
+        font-size: 50px;
+    }
+    
+    button {
+        border-radius: 20px;
+        padding: 10px 30px;
+        font-weight: bold;
+        font-size: x-large;
+        background-color: #DC4405;
+        margin-top: 30px;
+        cursor: pointer;
+        color: #FFF;
+    }
+    
+    button:hover {
+        transform: scale(1.1)
+    }

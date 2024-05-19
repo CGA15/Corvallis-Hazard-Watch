@@ -60,14 +60,14 @@ const App = () => {
   }
 
   
-  if (isLoading) {
+  /*if (isLoading) {
     return <div>Loading...</div>;
-  }
+  }*/
 
   return (
     
     <Router>  
-        
+        <GlobalStyle/>
         <Header>
           <LogoMini src={hazardlogo} alt="Hazard Logo" />
           <NavBar />

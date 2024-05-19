@@ -40,16 +40,5 @@ export default function Auth0Login() {
     }
   }, [ authCode ])
 
-  return (
-    <div>
-      {error && <p>Error: {error}</p>}
-      {!isAuthenticated && (
-        <LoginButton />
-      )}
-      {isAuthenticated && (
-        <LogoutButtonButton />
-      )}
-      {success ? <p>Success!</p> : <LoginButton />}
-    </div>
-  )
+  return isAuthenticated ? <LogoutButton /> : <LoginButton />;
 }

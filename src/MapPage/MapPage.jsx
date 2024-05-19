@@ -15,7 +15,9 @@ import { renderToString } from 'react-dom/server';
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { useParams } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import badWordsFilter from 'bad-words'
+
 
 
 
@@ -52,6 +54,8 @@ const MapPage = () => {
  const[grouped,setGrouped] = useState(false)
  const[update,setUpdate] = useState()
  const[length, setLength] = useState(0)
+
+  const { isAuthenticated } = useAuth0();
 
 
 
@@ -309,63 +313,71 @@ function getLocation() {
 
   // Define the onMapClick function
   const onMapClick = (e) => {
-    //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
-    
-    ////console.log("set On Click")
 
-    // L.popup()
-    //   .setLatLng(e.latlng)
-    //   .setContent(popupContent)
-    //   .openOn(map);
-    const randomNum = Math.floor(Math.random() * 100000000) + 1;
-    var popupContent = `
-                    <div>
-                        <h3>Please select a type of issue</h3>
-                        <select name="hazard" id="hazard${randomNum}">
-                            ${hazardTypes.map(hazard => `
-                                <option value="${hazard.id}">${hazard.name}</option>
-                            `).join('')}
-                        </select>
-                        <input type="text" id="textInput${randomNum}" placeholder= "description"> 
-                        <div id ="bad-length${randomNum}" style="display:none;">
-                          <p>The text entered exceeds character limit</p>
-                          <p id = "bad-length-value${randomNum}" ></p>
-                        </div>
-                        <div id ="bad-words${randomNum}" style="display:none;">
-                          <p id ="bad-words-caught${randomNum}" >The text you attempted to submit contains a word not allowed in our service</p>
-                          <p id = "bad-words-found${randomNum}" ></p>
-                        </div>
-                    </div>
-                    <div>
-                        <input type="radio" name="htype" id="pointRadio${randomNum}" checked> Point<br />
-                        <input type="radio" name="htype" id="circleRadio${randomNum}"> Circle<br />
-                        <div id="radiusSlider${randomNum}" style="display:none;">
-                            <label for="radius">Radius:</label>
-                            <input type="range" id="radius${randomNum}" name="radius" min="1" max="200" value="100">
-                            <span id="radiusValue${randomNum}">50</span> meters
-                        </div>
-                        <button id="closeButton${randomNum}">Close</button>
-                        <button id="submitButton${randomNum}">Submit</button>
-                    </div>
-                `;
+    if (!isAuthenticated) {
+      alert('You need to be signed in to post a hazard');
+      return;
+    }else{
+      
+       //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
 
-    popup = L.popup()
-      .setLatLng(e.latlng)
-      .setContent(popupContent)
-      .openOn(map);
+      ////console.log("set On Click")
 
-    // Attach event listeners after the content is added to the DOM
-    //make sure to attach after, as the this operation with html elements doesnt work well.
-    document.getElementById(`pointRadio${randomNum}`).addEventListener('click', () => updatePopupContent(randomNum));
-    document.getElementById(`circleRadio${randomNum}`).addEventListener('click', () => updatePopupContent(randomNum));
-    document.getElementById(`closeButton${randomNum}`).addEventListener('click', () => closePopup(randomNum));
-    document.getElementById(`radius${randomNum}`).addEventListener('input', () => {
-      document.getElementById(`radiusValue${randomNum}`).textContent = document.getElementById(`radius${randomNum}`).value;
-    });
-    
-    document.getElementById(`submitButton${randomNum}`).addEventListener('click', () =>
-      submitData(e.latlng.lat, e.latlng.lng, document.getElementById(`hazard${randomNum}`).value, new Date(), getHazardType(randomNum), getRadius(randomNum),document.getElementById(`textInput${randomNum}`).value, popup,randomNum)
-    );
+      // L.popup()
+      //   .setLatLng(e.latlng)
+      //   .setContent(popupContent)
+      //   .openOn(map);
+      const randomNum = Math.floor(Math.random() * 100000000) + 1;
+      var popupContent = `
+                      <div>
+                          <h3>Please select a type of issue</h3>
+                          <select name="hazard" id="hazard${randomNum}">
+                              ${hazardTypes.map(hazard => `
+                                  <option value="${hazard.id}">${hazard.name}</option>
+                              `).join('')}
+                          </select>
+                          <input type="text" id="textInput${randomNum}" placeholder= "description"> 
+                          <div id ="bad-length${randomNum}" style="display:none;">
+                            <p>The text entered exceeds character limit</p>
+                            <p id = "bad-length-value${randomNum}" ></p>
+                          </div>
+                          <div id ="bad-words${randomNum}" style="display:none;">
+                            <p id ="bad-words-caught${randomNum}" >The text you attempted to submit contains a word not allowed in our service</p>
+                            <p id = "bad-words-found${randomNum}" ></p>
+                          </div>
+                      </div>
+                      <div>
+                          <input type="radio" name="htype" id="pointRadio${randomNum}" checked> Point<br />
+                          <input type="radio" name="htype" id="circleRadio${randomNum}"> Circle<br />
+                          <div id="radiusSlider${randomNum}" style="display:none;">
+                              <label for="radius">Radius:</label>
+                              <input type="range" id="radius${randomNum}" name="radius" min="1" max="200" value="100">
+                              <span id="radiusValue${randomNum}">50</span> meters
+                          </div>
+                          <button id="closeButton${randomNum}">Close</button>
+                          <button id="submitButton${randomNum}">Submit</button>
+                      </div>
+                  `;
+
+      popup = L.popup()
+        .setLatLng(e.latlng)
+        .setContent(popupContent)
+        .openOn(map);
+
+      // Attach event listeners after the content is added to the DOM
+      //make sure to attach after, as the this operation with html elements doesnt work well.
+      document.getElementById(`pointRadio${randomNum}`).addEventListener('click', () => updatePopupContent(randomNum));
+      document.getElementById(`circleRadio${randomNum}`).addEventListener('click', () => updatePopupContent(randomNum));
+      document.getElementById(`closeButton${randomNum}`).addEventListener('click', () => closePopup(randomNum));
+      document.getElementById(`radius${randomNum}`).addEventListener('input', () => {
+        document.getElementById(`radiusValue${randomNum}`).textContent = document.getElementById(`radius${randomNum}`).value;
+      });
+
+      document.getElementById(`submitButton${randomNum}`).addEventListener('click', () =>
+        submitData(e.latlng.lat, e.latlng.lng, document.getElementById(`hazard${randomNum}`).value, new Date(), getHazardType(randomNum), getRadius(randomNum),document.getElementById(`textInput${randomNum}`).value, popup,randomNum)
+      );
+    }
+
   }
 
  const getData = async () =>{

@@ -6,8 +6,10 @@ import { useEffect } from 'react';
 import hazardlogo from './components/logo.png';
 import MapPage from './MapPage/MapPage'; // Adjust the import path as needed
 import Login from './pages/Login'
-//import Auth0Provider  from '@auth0/auth0-react';
-import Auth0ProviderWithHistory from './Auth0Provider';
+import { useAuth0 } from '@auth0/auth0-react';
+import NavBar from './components/NavBar';
+
+
 import DataView from './DataView/DataView';
 import styled from "@emotion/styled";
 import { useDispatch } from 'react-redux'
@@ -15,9 +17,11 @@ import Home from './homepage/home'
 import About from './aboutpage/about'
 
 
+
 import { fetchData} from './redux/storeSlice'
 import { fetchIcons } from './redux/iconSlice';
 import { fetchTypes } from './redux/hazTypesRedux';
+
 
 import GlobalStyle from './components/styled/Globalstyle.js';
 import { Header, LogoMini, Nav } from './components/styled/Header';
@@ -26,8 +30,11 @@ import { ImageContainer } from './components/styled/Image';
 import { Button } from './components/styled/Button';
 import { StyledLink, ButtonLink } from './components/styled/Link.js';
 
+
 //In order to add new pages, make new routes. and new Links
 const App = () => {
+  const { isLoading, error } = useAuth0();
+
   const dispatch = useDispatch();
     useEffect(() =>{
         dispatch(fetchIcons());
@@ -46,33 +53,26 @@ const App = () => {
   width: fit-content;
   background: lightslategrey;
   `
+
+
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
+
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     
-    <Router>
-     <Auth0ProviderWithHistory>
-    <GlobalStyle />
+    <Router>  
+        
         <Header>
           <LogoMini src={hazardlogo} alt="Hazard Logo" />
-          <Nav>
-            <ul className="links">
-              <li className="start">
-                <StyledLink to="/" title="Home">Home</StyledLink>
-              </li>
-              <li>
-                <StyledLink to="/map" title="Map">Map</StyledLink>
-              </li>
-              <li>
-                <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
-              </li>
-              <li>
-                <StyledLink to="/about" title="About">About</StyledLink>
-              </li>
-              <li className="login">
-                <ButtonLink to="/login" className="btn" title="Register/Sign-In"><span className="loginbtn">Login</span></ButtonLink>
-              </li>
-            </ul>
-            </Nav>
+          <NavBar />
         </Header>
+
 
   <main style={{ marginTop: '100px' }}>
       <Routes>
@@ -85,7 +85,7 @@ const App = () => {
       </Routes>
     
     </main>
-    </Auth0ProviderWithHistory>
+
   </Router>
 
   );

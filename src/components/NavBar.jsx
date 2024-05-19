@@ -1,34 +1,18 @@
 import React, { useState } from "react";
-import { NavLink as RouterNavLink } from "react-router-dom";
+import { StyledLink, ButtonLink } from './components/styled/Link.js';
+import { Nav } from './components/styled/Header';
 
 
-import {
-  Collapse,
-  Container,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Button,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
 
 import { useAuth0 } from "@auth0/auth0-react";
 
 const NavBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const {
     user,
     isAuthenticated,
     loginWithRedirect,
     logout,
   } = useAuth0();
-  const toggle = () => setIsOpen(!isOpen);
 
   const logoutWithRedirect = () =>
     logout({
@@ -40,56 +24,36 @@ const NavBar = () => {
   return (
     <Nav>
         <ul className="links">
-            
-            <li>
-                <a href="/map" title="Map">Map</a>
+            <li className="start">
+                  <StyledLink to="/" title="Home">Home</StyledLink>
             </li>
             <li>
-                <a href="/dataView" className="dataView">DataView</a>
+              <StyledLink to="/map" title="Map">Map</StyledLink>
+            </li>
+            <li>
+              <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
+            </li>
+            <li>
+              <StyledLink to="/about" title="About">About</StyledLink>
             </li>
             {!isAuthenticated && (
-                    <NavItem>
-                    <Button
-                        id="qsLoginBtn"
-                        color="primary"
-                        className="btn-margin"
-                        onClick={() => loginWithRedirect()}
-                    >
+                    
+                    <Button onClick={() => loginWithRedirect()}>
                         Log in
                     </Button>
-                    </NavItem>
+                    
             )}
             {isAuthenticated && (
-                    <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret id="profileDropDown">
-                        <img
-                        src={user.picture}
-                        alt="Profile"
-                        className="nav-user-profile rounded-circle"
-                        width="50"
-                        />
-                    </DropdownToggle>
-                    <DropdownMenu>
-    
-                        <DropdownItem
-                        tag={RouterNavLink}
-                        to="/profile"
-                        className="dropdown-profile"
-                        activeClassName="router-link-exact-active"
-                        >
-                         Profile
-                        </DropdownItem>
-                        <DropdownItem
-                        id="qsLogoutBtn"
-                        onClick={() => logoutWithRedirect()}
-                        > Logout
-                        </DropdownItem>
-                    </DropdownMenu>
-                    </UncontrolledDropdown>
+              <>
+                <img
+                src={user.picture}
+                alt="Profile"
+                width="50" />
+                <Button onClick={() => logoutWithRedirect()}>
+                  Logout
+                </Button>
+              </>      
             )}
-            <li className="login">
-                <a to="/login" className="btn" title="Register/Sign-In">Register/Sign-In</a>
-            </li>
         </ul>
     </Nav>
   );
@@ -98,19 +62,22 @@ const NavBar = () => {
 export default NavBar;
 
 /*
-<Nav>
-<ul className="links">
-  <li className="start">
-    <StyledLink to="/" title="Home">Home</StyledLink>
-  </li>
-  <li>
-    <StyledLink to="/map" title="Map">Map</StyledLink>
-  </li>
-  <li>
-    <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
-  </li>
-  <li className="login">
-    <ButtonLink to="/login" className="btn" title="Register/Sign-In">Register/Sign-In</ButtonLink>
-  </li>
-</ul>
-</Nav>*/
+            <Nav>
+              <ul className="links">
+                <li className="start">
+                  <StyledLink to="/" title="Home">Home</StyledLink>
+                </li>
+                <li>
+                  <StyledLink to="/map" title="Map">Map</StyledLink>
+                </li>
+                <li>
+                  <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
+                </li>
+                <li>
+                  <StyledLink to="/about" title="About">About</StyledLink>
+                </li>
+                <li className="login">
+                  <ButtonLink to="/login" className="btn" title="Register/Sign-In"><span className="loginbtn">Login</span></ButtonLink>
+                </li>
+              </ul>
+            </Nav>*/

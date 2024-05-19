@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import { Provider } from 'react-redux'
+import { Auth0Provider } from '@auth0/auth0-react'
 
 
 import store from './redux/store'
@@ -29,10 +30,16 @@ const providerConfig = {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-
+        <Auth0Provider
+      domain="dev-6m2d6yf4ffilgk3i.us.auth0.com"
+      clientId="kzqh8vmwcVoVFm5ipNO8rxmYsjMg8950"
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+      }}
+    >
         <Provider store ={store}>
             <App />
         </Provider>
-
+        </Auth0Provider>
     </React.StrictMode>,
 )

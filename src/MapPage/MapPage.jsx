@@ -15,6 +15,7 @@ import { renderToString } from 'react-dom/server';
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { useParams } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 
@@ -50,6 +51,8 @@ const MapPage = () => {
  const[grouped,setGrouped] = useState(false)
  const[update,setUpdate] = useState()
  const[length, setLength] = useState(0)
+
+  const { isAuthenticated } = useAuth0();
 
 
 
@@ -240,50 +243,57 @@ function getLocation() {
 
   // Define the onMapClick function
   const onMapClick = (e) => {
-    //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
-    ////console.log("set On Click")
 
-    // L.popup()
-    //   .setLatLng(e.latlng)
-    //   .setContent(popupContent)
-    //   .openOn(map);
-    var popupContent = `
-                    <div>
-                        <h3>Please select a type of issue</h3>
-                        <select name="hazard" id="hazard">
-                            ${hazardTypes.map(hazard => `
-                                <option value="${hazard.id}">${hazard.name}</option>
-                            `).join('')}
-                        </select>
-                        <input type="text" id="textInput" placeholder= "description"> 
+    if (!isAuthenticated) {
+      alert('You need to be signed in to post a hazard');
+      return;
+    }else{
+      
+      //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
+      ////console.log("set On Click")
 
-                    </div>
-                    <div>
-                        <input type="radio" name="htype" id="pointRadio"> Point<br />
-                        <input type="radio" name="htype" id="circleRadio"> Circle<br />
-                        <div id="radiusSlider" style="display:none;">
-                            <label for="radius">Radius:</label>
-                            <input type="range" id="radius" name="radius" min="1" max="200" value="100">
-                            <span id="radiusValue">50</span> meters
-                        </div>
-                        <button id="closeButton">Close</button>
-                        <button id="submitButton">Submit</button>
-                    </div>
-                `;
+      // L.popup()
+      //   .setLatLng(e.latlng)
+      //   .setContent(popupContent)
+      //   .openOn(map);
+      var popupContent = `
+                      <div>
+                          <h3>Please select a type of issue</h3>
+                          <select name="hazard" id="hazard">
+                              ${hazardTypes.map(hazard => `
+                                  <option value="${hazard.id}">${hazard.name}</option>
+                              `).join('')}
+                          </select>
+                          <input type="text" id="textInput" placeholder= "description"> 
 
-    L.popup()
-      .setLatLng(e.latlng)
-      .setContent(popupContent)
-      .openOn(map);
+                      </div>
+                      <div>
+                          <input type="radio" name="htype" id="pointRadio"> Point<br />
+                          <input type="radio" name="htype" id="circleRadio"> Circle<br />
+                          <div id="radiusSlider" style="display:none;">
+                              <label for="radius">Radius:</label>
+                              <input type="range" id="radius" name="radius" min="1" max="200" value="100">
+                              <span id="radiusValue">50</span> meters
+                          </div>
+                          <button id="closeButton">Close</button>
+                          <button id="submitButton">Submit</button>
+                      </div>
+                  `;
 
-    // Attach event listeners after the content is added to the DOM
-    //make sure to attach after, as the this operation with html elements doesnt work well.
-    document.getElementById('pointRadio').addEventListener('click', () => updatePopupContent());
-    document.getElementById('circleRadio').addEventListener('click', () => updatePopupContent());
-    document.getElementById('closeButton').addEventListener('click', () => closePopup());
-    document.getElementById('submitButton').addEventListener('click', () =>
-      submitData(e.latlng.lat, e.latlng.lng, document.getElementById('hazard').value, new Date(), getHazardType(), getRadius(),document.getElementById('textInput').value)
-    );
+      L.popup()
+        .setLatLng(e.latlng)
+        .setContent(popupContent)
+        .openOn(map);
+
+      // Attach event listeners after the content is added to the DOM
+      //make sure to attach after, as the this operation with html elements doesnt work well.
+      document.getElementById('pointRadio').addEventListener('click', () => updatePopupContent());
+      document.getElementById('circleRadio').addEventListener('click', () => updatePopupContent());
+      document.getElementById('closeButton').addEventListener('click', () => closePopup());
+      document.getElementById('submitButton').addEventListener('click', () =>
+        submitData(e.latlng.lat, e.latlng.lng, document.getElementById('hazard').value, new Date(), getHazardType(), getRadius(),document.getElementById('textInput').value)
+      );
+    }
   }
 
  const getData = async () =>{

@@ -40,14 +40,12 @@ const NavBar = () => {
   return (
     <Nav>
         <ul className="links">
-            <li className="start">
-                <StyledLink to="/" title="Home">Home</StyledLink>
+            
+            <li>
+                <a href="/map" title="Map">Map</a>
             </li>
             <li>
-                <StyledLink to="/map" title="Map">Map</StyledLink>
-            </li>
-            <li>
-                <StyledLink to="/dataView" className="dataView">DataView</StyledLink>
+                <a href="/dataView" className="dataView">DataView</a>
             </li>
             {!isAuthenticated && (
                     <NavItem>
@@ -72,7 +70,7 @@ const NavBar = () => {
                         />
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem header>{user.name}</DropdownItem>
+    
                         <DropdownItem
                         tag={RouterNavLink}
                         to="/profile"
@@ -90,7 +88,7 @@ const NavBar = () => {
                     </UncontrolledDropdown>
             )}
             <li className="login">
-                <ButtonLink to="/login" className="btn" title="Register/Sign-In">Register/Sign-In</ButtonLink>
+                <a to="/login" className="btn" title="Register/Sign-In">Register/Sign-In</a>
             </li>
         </ul>
     </Nav>

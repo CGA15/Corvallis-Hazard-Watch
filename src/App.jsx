@@ -69,7 +69,9 @@ const App = () => {
     <Router>  
         <GlobalStyle/>
         <Header>
-          <LogoMini src={hazardlogo} alt="Hazard Logo" />
+          <Link to="/">
+            <LogoMini src={hazardlogo} alt="Hazard Logo" />
+          </Link>          
           <NavBar />
         </Header>
 

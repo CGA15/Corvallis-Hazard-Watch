@@ -32,8 +32,9 @@ const MapPage = () => {
   const mapRef = useRef(null);
   // const [mapFunctions, setMapFunctions] = useState(null)
   const [dropDown, setDropDown] = useState(false)
-  const currentDate = new Date();
-  const twentyFourHoursAgo = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000 );
+  const currentTime = new Date();
+  const currentDate = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000 );
+  const twentyFourHoursAgo = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000 );
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [checkList, setCheckList] = useState(false)
@@ -278,12 +279,19 @@ function getLocation() {
         icon_type: null,
         text: textContent,  
         image: null,
-        creator_id: 4,
+        creator_id: 10,
         radius: rad,
         location: locdata
     }
     //console.log(controller)
-    controller.insert(hazard)
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    var hazards = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
+
+    if (hazards.length === 0) {
+      hazards = "All";
+    }
+    controller.insert(hazard,start,end,hazards)
     hazard.created_at= hazard.created_at.toLocaleString()
     // const dispatch = useDispatch()
     dispatch(add(hazard))
@@ -584,6 +592,8 @@ const unGroup = () =>{
   }
   const filterBox = css`
  text-align: right;
+ position: relative;
+ z-index: 1000;
 `;
   return (
     //current map, to change height, modify the height variable, likely you could modify width by adding that aas a field
@@ -632,8 +642,10 @@ const unGroup = () =>{
         {/* )} */}
 
       </div>
-      <div ref={mapContainerRef} id="map" style={{ height: '500px' }}>
+      <div ref={mapContainerRef} id="map" style={{ height: '70vh' }}>
+      
       </div>
+      <p>To create a hazard, first be signed in, then click anywhere on the map</p>
     </div>
   );
 };

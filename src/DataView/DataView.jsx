@@ -161,9 +161,12 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     };
-
+    const FilterBox = styled.div`
+    position: relative;
+    z-index: 1000;
+   `;
       return (
-          <div>
+          <FilterBox>
               <input type="text" placeholder="EX: Corvallis, Oregon, US" onChange={(e) => setSearch(e.target.value)}/>
               <div>
               Start Date:
@@ -225,7 +228,7 @@
                   </tbody>
               </Table>
               <button onClick={handlePrint}>Print</button>
-          </div>
+          </FilterBox>
       );
   };
 

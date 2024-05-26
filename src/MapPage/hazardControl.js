@@ -44,6 +44,21 @@ export default class Control {
             this.grow();
         }
         this.container[this.current++] = newHazard;
+        console.log("inserting new hazard",this.container)
+        if(this.filteredData)
+            this.filteredData.push(newHazard)
+
+    }
+    insert(hazard, start,end ,hazards) {
+        //////console.log("test")
+        var newHazard = new Hazard(hazard, this.map, this.hazTypes, this.icons);
+        if (this.current == this.size) {
+            this.grow();
+        }
+        this.container[this.current++] = newHazard;
+        console.log("inserting new hazard",this.container)
+        if(start,end,hazards)
+        this.filter(start, end, hazards)
 
     }
     update(newhazardList, start, end, hazards) {

@@ -27,13 +27,14 @@
           setEndDate(currentDate.toISOString())
           setCheckList(false)
           setSelectedHazards({});
+          submitFilters();
       }
-      const submitFilters = () => {
+      const submitFilters = (searchString) => {
           // Gather filter values
           const start = new Date(startDate);
           const end = new Date(endDate);
           var hazardsTypes = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
-      
+          console.log(searchString)
           if (hazardsTypes.length === 0) {
               hazardsTypes =  "All";
           }
@@ -44,7 +45,7 @@
           var hazardsCopy = hazards.map(hazard => ({ ...hazard }));
 
 
-          filter(start,end,hazardsTypes,hazardsCopy);
+          filter(start,end,hazardsTypes,hazardsCopy, searchString);
         };
       
         const handleCheckboxChange = (hazardName) => {
@@ -74,28 +75,33 @@
           });
           setHazardsData(sortedHazards);
       },[hazards])
-      const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    })
-      const filter = (minDate,maxDate,type, hazardsFilter) =>{
+    //   const handlePrint = useReactToPrint({
+    //     content: () => componentRef.current,
+    // })
+      const filter = (minDate,maxDate,type, hazardsFilter,searchString) =>{
           // viewAll()
-        
+          console.log(searchString)
+
           hazardsFilter = filterByTime(minDate,maxDate,hazardsFilter)
           hazardsFilter = filterByType(type,hazardsFilter)
-          if(search && search.length>0)
-            hazardsFilter = filterByName(hazardsFilter)
+          if(searchString && searchString.length>0)
+            hazardsFilter = filterByName(hazardsFilter,searchString)
           const sortedHazards = [...hazardsFilter].sort((a, b) => {
               return new Date(b.created_at) - new Date(a.created_at);
           });
           setHazardsData(sortedHazards);
+          const searchElm = document.getElementById("locationSearch")
+          searchElm.value = searchString
       }
       // const viewAll = () => {
       //     for (let i = 0; i < this.current; i++) {
       //         this.container[i].show();
       //     }
       // }
-      const filterByName = (hazards) => {
-        var locationData = search.split(',').map(item => item.trim().toLowerCase());
+      const filterByName = (hazards,searchString) => {
+        console.log("filter by name: ",searchString)
+
+        var locationData = searchString.split(',').map(item => item.trim().toLowerCase());
         
         hazards = hazards.filter(item => {
           var locationData2 = item.location.split(',').map(item => item.trim().toLowerCase());
@@ -167,7 +173,7 @@
    `;
       return (
           <FilterBox>
-              <input type="text" placeholder="EX: Corvallis, Oregon, US" onChange={(e) => setSearch(e.target.value)}/>
+              <input id= "locationSearch" type="text" placeholder="EX: Corvallis, Oregon, US" />
               <div>
               Start Date:
               <input
@@ -203,11 +209,16 @@
                   </ul>
                 )}
               </div>
-              <button onClick={submitFilters}>Submit</button>
+              <button onClick={() => {
+                const location = document.getElementById("locationSearch")
+                console.log(location.value)
+                const searchString = location.value
+                submitFilters(searchString)
+              }}>Submit</button>
               <button onClick={clearFilters}>Clear Filters</button>
               <button onClick={saveAs}>Save</button>
             </div>
-              <Table ref={componentRef}> 
+              <Table> 
                   <thead>
                       <tr>
                           <TableHeader>ID</TableHeader>
@@ -227,7 +238,7 @@
                       ))}
                   </tbody>
               </Table>
-              <button onClick={handlePrint}>Print</button>
+              {/* <button onClick={handlePrint}>Print</button> */}
           </FilterBox>
       );
   };

@@ -55,9 +55,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-/*
-<img
-src={user.picture}
-alt="Profile"
-width="50" />*/

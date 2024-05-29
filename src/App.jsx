@@ -29,6 +29,7 @@ import { Container, Info, LandingPage } from './components/styled/Container';
 import { ImageContainer } from './components/styled/Image';
 import { Button } from './components/styled/Button';
 import { StyledLink, ButtonLink } from './components/styled/Link.js';
+import { fetchSensor } from './redux/sensorSlice.js';
 
 
 //In order to add new pages, make new routes. and new Links
@@ -40,6 +41,7 @@ const App = () => {
         dispatch(fetchIcons());
         dispatch(fetchTypes());
         dispatch(fetchData());
+        dispatch(fetchSensor())
         
     },[dispatch])
 
@@ -69,7 +71,9 @@ const App = () => {
     <Router>  
         <GlobalStyle/>
         <Header>
-          <LogoMini src={hazardlogo} alt="Hazard Logo" />
+          <Link to="/">
+            <LogoMini src={hazardlogo} alt="Hazard Logo" />
+          </Link>          
           <NavBar />
         </Header>
 

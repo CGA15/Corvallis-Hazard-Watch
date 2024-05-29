@@ -15,10 +15,7 @@ const GlobalStyle = createGlobalStyle `
     overflowY: 'scroll';
   }
 
-  span {
-    color: #FFF;
-    fontWeight: 'bold';
-  }
+  
 
 
   strong{

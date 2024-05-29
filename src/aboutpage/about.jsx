@@ -32,11 +32,12 @@ const About = () => {
                     <img src={teamImage} alt="Team" />
                 </TeamContainer>
                 <section>
+                <a href="https://github.com/CGA15/Corvallis-Hazard-Watch"><h2>GitHub</h2></a>
+                <a href="https://github.com/CGA15/Corvallis-Hazard-Watch"><p>https://github.com/CGA15/Corvallis-Hazard-Watch"</p></a>
                 <h2>Contact Information</h2>
-                <p>Email: contact@hazardwatch.com</p>
-                <p>Phone: +123 456 7890</p>
+                <p>Email: corvallis-hazardwatch@proton.me</p>
                 <p>Address: 123 Safe Street, Safety City, Safe Country</p>
-                <p><b>**The above contact info are placeholder values because website is still under construction**</b></p>
+                <p><b>**The above address info is a placeholder values because website is still under construction**</b></p>
                 </section>
             </Info>
             </Container>

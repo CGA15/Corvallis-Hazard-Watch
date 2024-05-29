@@ -57,7 +57,7 @@
                 throw error;
             }
 
-            res.json({ data });
+            res.json({ data  });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -142,6 +142,54 @@
         } catch(error) {
             res.status(500).json({ error: "Internal Server Error"});
         }
+    });
+
+    app.post('/api/sensor', async (req,res) => {
+        const { sensor_name, latitude, longitude } = req.body;
+
+        console.log(req.body)
+        console.log(sensor_name, latitude, longitude)
+
+        if(!sensor_name || latitude === undefined|| longitude ===undefined ) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+
+        try {
+            
+            
+            const time = new Date();
+            // formatting the time value
+            const timeHolder = time.toISOString();
+
+            const { data, error } = await supabase
+                .from('sensor')
+                .insert([{ sensor_name: sensor_name,sensor_status:0, last_updated: timeHolder, latitude: latitude, longitude:longitude }])
+                .select()
+
+            if (error) {
+                throw error;
+            }
+
+            res.status(201).json({ message: 'Sensor created' });
+        } catch(error) {
+            res.status(500).json({ error: "Internal Server Error"});
+        }
+    })
+    app.get('/api/getsensor', async (req, res) => {
+        try {
+            const { data, error } = await supabase.from('sensor').select('*');
+
+            if (error) {
+                throw error;
+            }
+
+            res.json({ data  });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+
     });
 
     app.get('*', function (req, res, next) {

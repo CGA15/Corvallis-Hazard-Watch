@@ -444,7 +444,9 @@ a {
 .dropdown-check-list {
     display: inline-block;
 }
-
+.anchor{
+    color: black
+}
 .dropdown-check-list .anchor {
     position: relative;
     cursor: pointer;
@@ -494,4 +496,8 @@ a {
 
 .dropdown-check-list.visible .items {
     display: block;
+}
+
+span .leaflet-control-zoom-in{
+    color:black
 }

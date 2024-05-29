@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import hazardlogo from './components/logo.png';
 import MapPage from './MapPage/MapPage'; // Adjust the import path as needed
-import Login from './pages/Login'
 import { useAuth0 } from '@auth0/auth0-react';
 import NavBar from './components/NavBar';
 
@@ -84,7 +83,6 @@ const App = () => {
         <Route path="/map" element={<MapPage />} />
         <Route path="/map/:lat/:lon/:time" element = {<MapPage />}/>
         <Route path="/dataView" element={<DataView/>}/>
-        <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
       </Routes>
     

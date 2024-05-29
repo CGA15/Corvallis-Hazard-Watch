@@ -6,8 +6,8 @@ export default class Hazard {
         this.date=this.dateObject.toLocaleString()
         this.types = haztypes
         this.icons = icons
-        // console.log("icons in hazard",icons)
-        // console.log("haztypes in hazard",haztypes)
+        // //console.log("icons in hazard",icons)
+        // //console.log("haztypes in hazard",haztypes)
         this.long=hazard.longitude
         this.type=this.types.find(type => type.id === hazard.type)?.name || "Other";
         this.icon=icons.find(type => type.id === hazard.type) || icons.find(type=> type.id ===100);

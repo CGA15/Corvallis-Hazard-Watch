@@ -2,7 +2,7 @@ import Hazard from './hazard'; // Import Hazard if it's in a separate module
 
 //This is an array list object
 export default class Control {
-    constructor(hazardList, map, haztypes, api, icons) {
+    constructor(hazardList, map, haztypes, api, icons,sensors) {
         this.hazardList = hazardList
         this.icons = icons
         this.hazTypes = haztypes
@@ -13,10 +13,11 @@ export default class Control {
         this.groupedContainer = new Array() //structure [location, [hazards]]
         var temp = this.size;
         this.api = api
-        //console.log("testing in control hazTypes")
-        //console.log(this.hazTypes)
-        ////console.log(typeof hazTypes[0].created_at)
-        //console.log(this)
+        this.sensors = sensors
+        ////console.log("testing in control hazTypes")
+        ////console.log(this.hazTypes)
+        //////console.log(typeof hazTypes[0].created_at)
+        ////console.log(this)
         this.container;
         this.map = map;
         if (this.size < 50) {
@@ -32,55 +33,80 @@ export default class Control {
             hazard.created_at = new Date(hazard.created_at);
             this.insert(hazard);
         }
+        // console.log(sensors)
+        this.sensors.forEach(Element =>{
+            if (Element.sensor_status===1)
+            {
+                let sensor = JSON.parse(JSON.stringify(Element));
+                console.log("sensor reported")
+                sensor.created_at = new Date(sensor.last_updated)
+                sensor.radius = 50;
+                sensor.type=1
+                sensor.radius = 50;
+                this.insert(sensor)
+            }
+        })
         this.currentDate = new Date()
         var twentyFourHoursAgo = new Date(this.currentDate.getTime() - (24 * 60 * 60 * 1000))
         // this.filter(twentyFourHoursAgo,this.currentDate,"All")
     }
     //inserts a hazard into the list
     insert(hazard) {
-        //////console.log("test")
+        ////////console.log("test")
         var newHazard = new Hazard(hazard, this.map, this.hazTypes, this.icons);
         if (this.current == this.size) {
             this.grow();
         }
         this.container[this.current++] = newHazard;
-        console.log("inserting new hazard",this.container)
+        //console.log("inserting new hazard",this.container)
         if(this.filteredData)
             this.filteredData.push(newHazard)
 
     }
     insert(hazard, start,end ,hazards) {
-        //////console.log("test")
+        ////////console.log("test")
         var newHazard = new Hazard(hazard, this.map, this.hazTypes, this.icons);
         if (this.current == this.size) {
             this.grow();
         }
         this.container[this.current++] = newHazard;
-        console.log("inserting new hazard",this.container)
+        //console.log("inserting new hazard",this.container)
         if(start,end,hazards)
         this.filter(start, end, hazards)
 
     }
-    update(newhazardList, start, end, hazards) {
+    update(newhazardList, start, end, hazards, sensors) {
         // const newItems = newhazardList.filter(item => !this.hazardList.includes(item))
-        // console.log("old List", this.hazardList)
-        // console.log(newItems)
+        // //console.log("old List", this.hazardList)
+        // //console.log(newItems)
         // newItems.forEach(element => {
         //     this.insert(element)
         // });
         // delete this.container
-        // console.log(this.container)
+        // //console.log(this.container)
+        this.removeAll()
         this.container = new Array(2 * newhazardList.length)
         let temp = newhazardList.length
         this.current = 0;
         for (let i = 0; i < temp; i++) {
             // Deep copy each object in hazardList
             let hazard = JSON.parse(JSON.stringify(newhazardList[i]));
-            // console.log(hazard)
+            // //console.log(hazard)
             hazard.created_at = new Date(hazard.created_at);
             this.insert(hazard);
         }
-        console.log(this.container)
+        this.sensors.forEach(Element =>{
+            if (Element.sensor_status===1)
+            {
+                let sensor = JSON.parse(JSON.stringify(Element));
+                sensor.created_at = new Date(sensor.last_updated)
+                sensor.type=1
+                sensor.radius = 50;
+                sensor.text = "automated flood report";
+                this.insert(sensor)
+            }
+        })
+        //console.log(this.container)
         this.filter(start, end, hazards)
 
     }
@@ -110,8 +136,8 @@ export default class Control {
     }
     // Filter, this function will reset all filters, then run filter by time and filter by type
     filter(minDate, maxDate, type) {
-        //console.log("filter called" ,minDate, maxDate, type)
-        //console.log("self", this)
+        ////console.log("filter called" ,minDate, maxDate, type)
+        ////console.log("self", this)
         this.groupedContainer.forEach(item => {
             if(item[2]!=="loc")
             {
@@ -129,7 +155,7 @@ export default class Control {
                 this.filteredData.push(this.container[i])
             }
         }
-        // console.log(this.filteredData)
+        // //console.log(this.filteredData)
         if(this.grouped)
         {
             this.grouped=false
@@ -155,7 +181,7 @@ export default class Control {
     }
     unGroup(start, end, hazards, api) {
         if (this.grouped) {
-            //console.log("ungroup")
+            ////console.log("ungroup")
             this.grouped = false
             this.filter(start, end, hazards)
             this.groupedContainer.forEach(item => {
@@ -170,7 +196,7 @@ export default class Control {
     }
     async group() {
         if (!this.grouped) {
-            //console.log("group")
+            ////console.log("group")
             this.removeAll()
             this.grouped = true
             delete this.groupedContainer
@@ -200,7 +226,7 @@ export default class Control {
                     })
                     .then(data => {
                         // Handle the response data here
-                        console.log(data);
+                        //console.log(data);
                         if (data[0])
                             item[2] = [data[0].lat, data[0].lon];
                     })
@@ -214,7 +240,7 @@ export default class Control {
             Promise.all(fetchPromises)
                 .then(() => {
                     // All fetch requests have completed
-                    // console.log(this.groupedContainer);
+                    // //console.log(this.groupedContainer);
                     this.groupedContainer.forEach(item => {
                         if(item[2]!=="loc")
                         {

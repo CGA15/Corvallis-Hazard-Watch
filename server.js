@@ -57,7 +57,7 @@
                 throw error;
             }
 
-            res.json({ data });
+            res.json({ data  });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -84,23 +84,53 @@
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
+    app.post('/api/sensor', async (req,res) => {
+        const { sensor_name, latitude, longitude } = req.body;
 
-    app.post('/sensor', async (req, res) => {
-        try {
-            // Check if the request contains the required fields
-            if (!req.body.hasOwnProperty('lat') || !req.body.hasOwnProperty('long') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('long')) {
-                return res.status(400).json({ message: "Missing required fields" });
-            }
-            
-            // Implement your logic here to handle the sensor data
-            // For now, let's return a message indicating that this functionality is not yet implemented
-            return res.status(501).json({ message: "This functionality is not yet implemented" });
-        } catch (error) {
-            console.error("Error processing sensor data:", error);
-            return res.status(500).json({ message: "Internal server error" });
+        console.log(req.body)
+        console.log(sensor_name, latitude, longitude)
+
+        if(!sensor_name || latitude === undefined|| longitude ===undefined ) {
+            return res.status(400).json({ message: "Missing required fields" });
         }
+
+
+        try {
+            
+            
+            const time = new Date();
+            // formatting the time value
+            const timeHolder = time.toISOString();
+
+            const { data, error } = await supabase
+                .from('sensor')
+                .insert([{ sensor_name: sensor_name,sensor_status:0, last_updated: timeHolder, latitude: latitude, longitude:longitude }])
+                .select()
+
+            if (error) {
+                throw error;
+            }
+
+            res.status(201).json({ message: 'Sensor created' });
+        } catch(error) {
+            res.status(500).json({ error: "Internal Server Error"});
+        }
+    })
+    app.get('/api/getsensor', async (req, res) => {
+        try {
+            const { data, error } = await supabase.from('sensor').select('*');
+
+            if (error) {
+                throw error;
+            }
+
+            res.json({ data  });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+
     });
-    
 
 
     app.get('*', function (req, res, next) {

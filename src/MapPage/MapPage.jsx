@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 // import hazardTypes from "./hazardTypes.json"
 import { useDispatch, useSelector } from 'react-redux';
 import { selectStore, selectFetchedAt, fetchData } from '../redux/storeSlice';
+import { selectSensor, fetchSensor } from '../redux/sensorSlice';
 import { selectHazTypes } from '../redux/hazTypesRedux';
 import { selectIcons } from '../redux/iconSlice';
 import Control from './hazardControl';
@@ -44,9 +45,10 @@ const MapPage = () => {
   const hazards = useSelector(selectStore)
   const hazardTypes = useSelector(selectHazTypes)
   const icons = useSelector(selectIcons)
-  console.log("hazards" , hazards)
-  console.log("hazardTypes" , hazardTypes)
-  console.log("icons" , icons)
+  const sesnors = useSelector(selectSensor)
+  //console.log("hazards" , hazards)
+  //console.log("hazardTypes" , hazardTypes)
+  //console.log("icons" , icons)
 
   const [controller, setController] = useState(null)
   const dispatch = useDispatch(); // Move useDispatch() outside of the component body
@@ -101,12 +103,12 @@ function getLocation() {
     (position) => {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      //console.log('Latitude:', latitude);
-      //console.log('Longitude:', longitude);
+      ////console.log('Latitude:', latitude);
+      ////console.log('Longitude:', longitude);
       // Now you can use latitude and longitude to center your map
       // For example, set it as the initial state in your component
-      //console.log(`map.setView([${latitude}, ${longitude}], 12);`)
-      //console.log(map)
+      ////console.log(`map.setView([${latitude}, ${longitude}], 12);`)
+      ////console.log(map)
       map.setView([latitude, longitude], 14);
       return latitude,longitude
     },
@@ -161,9 +163,9 @@ function getLocation() {
   //function for when you click the submit button. 
   function submitData(lat, long, hazardType, time, type, rad, text, popup,randomNum) {
     // Handle submission logic here
-    //////console.log(rad)
-    // console.log(typeof lat, lat)
-    // console.log(typeof long, long)
+    ////////console.log(rad)
+    // //console.log(typeof lat, lat)
+    // //console.log(typeof long, long)
     const badLength = document.getElementById(`bad-length${randomNum}`)
     var badWordsCaught= document.getElementById(`bad-words${randomNum}`)
     badWordsCaught.style.display ='none'
@@ -176,8 +178,8 @@ function getLocation() {
       var long=long - Math.floor((long+180)/360)*360
       map.setView([lat,long],13)
     } 
-    // console.log(typeof lat2, lat2)
-    // console.log(typeof long2, long2)
+    // //console.log(typeof lat2, lat2)
+    // //console.log(typeof long2, long2)
     // alert(`Data submitted!\nLat: ${lat2}\nLong: ${long2}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}\nText: ${text}`);
     if (text.length >200){
       const badLengthValue = document.getElementById(`bad-length-value${randomNum}`)
@@ -247,7 +249,7 @@ function getLocation() {
       const limit = 1;
       const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=${limit}&appid=${apiKey}`);
       const location = await response.json();
-      //console.log(location);
+      ////console.log(location);
       if(location[0] && location[0].country && location[0].country === "US")
             {
                 const locString = `${location[0].name},${location[0].state}, ${location[0].country}`
@@ -283,7 +285,7 @@ function getLocation() {
         radius: rad,
         location: locdata
     }
-    //console.log(controller)
+    ////console.log(controller)
     const start = new Date(startDate);
     const end = new Date(endDate);
     var hazards = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
@@ -309,7 +311,7 @@ function getLocation() {
             return response.json();
         })
         .then(data => {
-            // ////console.log('Server response:', data);
+            // //////console.log('Server response:', data);
             // Handle the response data as needed
         })
         .catch(error => {
@@ -329,7 +331,7 @@ function getLocation() {
       
        //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
 
-      ////console.log("set On Click")
+      //////console.log("set On Click")
 
       // L.popup()
       //   .setLatLng(e.latlng)
@@ -389,12 +391,13 @@ function getLocation() {
   }
 
  const getData = async () =>{
+      dispatch(fetchSensor())
       dispatch(fetchData())
       setUpdate(true)
   }
   useEffect(() => {
     if(update && hazards.length!=length && controller){
-      // console.log("update called")
+      // //console.log("update called")
       const start = new Date(startDate);
       const end = new Date(endDate);
       var hazardsTypes = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
@@ -402,11 +405,11 @@ function getLocation() {
       if (hazardsTypes.length === 0) {
         hazardsTypes = "All";
       }
-      controller.update(hazards, start, end, hazardsTypes)
+      controller.update(hazards, start, end, hazardsTypes, sesnors)
       setLength(hazards.length)
       setUpdate(null)
     }
-  },[hazards, update])
+  },[hazards,sesnors, update])
   //when the page loads, it will run this code to initialize the map
   useEffect(() => {
     // Function to initialize the map
@@ -417,7 +420,7 @@ function getLocation() {
         if (!mapContainerRef.current._leaflet_id) {
           // Create a Leaflet map with an initial view
         if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)) && !isNaN(parseFloat(time))) {
-            //console.log("they are numbers")
+            ////console.log("they are numbers")
             const newStart = new Date(parseFloat(time)- 24 * 60 * 60 * 1000)
             const newEnd = new Date(parseFloat(time)+ 24 * 60 * 60 * 1000)
             setStartDate(newStart.toISOString())
@@ -425,7 +428,7 @@ function getLocation() {
             setMap(L.map(mapContainerRef.current).setView([parseFloat(lat), parseFloat(lon)], 18));
 
         } else {
-          //console.log("they arent numbers", typeof lat)
+          ////console.log("they arent numbers", typeof lat)
           setStartDate(twentyFourHoursAgo.toISOString())
           setEndDate(currentDate.toISOString())
           setMap(L.map(mapContainerRef.current).setView([44.564568,-123.262047], 15));
@@ -448,7 +451,7 @@ function getLocation() {
     };
   }, [hazards]); // Empty dependency array ensures that it runs only once on mount
   useEffect(() => {
-    if (map && !setUpOnce) {
+    if (map && !setUpOnce &&sesnors) {
       setSetUpOnce(false)
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -456,26 +459,26 @@ function getLocation() {
       }).addTo(map);
       mapRef.current = map;
       
-     
-      const controller = new Control(hazards,map,hazardTypes,apiKey, icons)
+      const controller = new Control(hazards,map,hazardTypes,apiKey, icons,sesnors)
       setLength(hazards.length)
       setController(controller)
       if(isNaN(parseFloat(lat)))
         getUserLocation()
-      //console.log("check",controller)
+      ////console.log("check",controller)
+      
      
 
 
-      ////console.log("haztypes check one")
-      ////console.log(haztypes)
+      //////console.log("haztypes check one")
+      //////console.log(haztypes)
     }
-  }, [map, setUpOnce])
+  }, [map, setUpOnce, sesnors])
   useEffect (() => {
     if(controller)
     {
-      if(Date.now() - dataAge > 5*1000*60)
+      if(Date.now() - dataAge > 5*1000)
       {
-        // console.log("data too old")
+        // //console.log("data too old")
         getData()
        
       }
@@ -491,8 +494,8 @@ function getLocation() {
         start = twentyFourHoursAgo;
         endTime = currentDate
       }
-      //console.log("start",start)
-      //console.log("end",endTime)
+      ////console.log("start",start)
+      ////console.log("end",endTime)
       controller.filter(start,endTime,"All")
       map.on('zoomend', function () {
         // Get the current zoom level
@@ -501,7 +504,7 @@ function getLocation() {
         // Check if the zoom level is below a certain threshold
         if (currentZoom >= 13) {
             // Zoomed out, do something
-            // //console.log('Zoom bound');           
+            // ////console.log('Zoom bound');           
               unGroup();             
         }
         else
@@ -527,7 +530,7 @@ function getLocation() {
       hazards = "All";
     }
 
-    //////console.log(start, end, hazards);
+    ////////console.log(start, end, hazards);
 
     // Pass filters to mapFunctions.filter()
     controller.filter(start, end, hazards);
@@ -562,7 +565,7 @@ const unGroup = () =>{
     if (hazards.length === 0) {
       hazards = "All";
     }
-    //console.log(controller)
+    ////console.log(controller)
     controller.unGroup(start,end,hazards, apiKey)
     submitFilters()
     //due to leaflet not wanting to update values, this was the best way I could get the program to work
@@ -587,7 +590,7 @@ const unGroup = () =>{
   //     checkList.classList.add('visible');
   // }
   const openCheckList = () => {
-    //////console.log("hello")
+    ////////console.log("hello")
     setCheckList(!checkList)
   }
   const filterBox = css`

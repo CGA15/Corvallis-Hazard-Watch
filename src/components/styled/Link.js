@@ -23,7 +23,7 @@ export const ButtonLink = styled(Link)
 `
   border-radius: 20px;
   padding: 10px 20px;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   background-color: #DC4405;
   cursor: pointer;
 

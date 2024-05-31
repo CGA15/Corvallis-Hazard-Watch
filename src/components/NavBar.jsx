@@ -5,6 +5,7 @@ import { Nav } from './styled/Header';
 
 
 import { useAuth0 } from "@auth0/auth0-react";
+import GlobalStyle from "./styled/Globalstyle.js";
 
 const NavBar = () => {
   const {
@@ -22,6 +23,8 @@ const NavBar = () => {
     });
 
   return (
+    <>
+    <GlobalStyle/>
     <Nav>
         <ul className="links">
             <li className="start">
@@ -37,20 +40,24 @@ const NavBar = () => {
               <StyledLink to="/about" title="About">About</StyledLink>
             </li>
             {!isAuthenticated && (      
+              <li>
               <ButtonLink onClick={() => loginWithRedirect()}>
                 Log in
-              </ButtonLink>      
+              </ButtonLink> 
+              </li>     
             )}
             {isAuthenticated && (
               <>
-                
+                <li>
                 <ButtonLink onClick={() => logoutWithRedirect()}>
                   Logout
                 </ButtonLink>
+                </li>
               </>      
             )}
         </ul>
     </Nav>
+    </>
   );
 };
 

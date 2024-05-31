@@ -8,6 +8,7 @@
   import styled from "@emotion/styled";
   import { selectHazTypes } from '../redux/hazTypesRedux';
   import { useReactToPrint } from 'react-to-print';
+  import { useNavigate } from 'react-router-dom';
 
 
   const DataView = () => {
@@ -23,6 +24,7 @@
       const [checkList, setCheckList] = useState(false)
       const [selectedHazards, setSelectedHazards] = useState({});
       const componentRef = useRef();
+      const navigateUse = useNavigate();
       //resets filters
       const clearFilters = () => {
           setStartDate(twentyFourHoursAgo.toISOString())
@@ -149,7 +151,8 @@
       const navigate = (item) =>{
         const time = new Date(item.created_at).getTime()
         const navstring =`/map/${item.latitude}/${item.longitude}/${time}`
-        window.location.href = navstring;
+        //window.location.href = navstring;
+        navigateUse(navstring);
 
       }
       //saves curretn table as a .csv file

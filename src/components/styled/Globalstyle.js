@@ -8,12 +8,28 @@ const GlobalStyle = createGlobalStyle `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
 
-  body {
+
+  <meta name="viewport" content="width=device-width" />
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+
+  html {
+    box-sizing: border-box;
+    overflow-x: hidden; 
+  }
+
+  html, body {
     font-family: "Ubuntu", sans-serif;
     background-color: #FAFAFA;
     color: #5d5d5d;
     overflowY: 'scroll';
+    overflowX: 'hidden';
   }
+
 
   
 

@@ -14,10 +14,6 @@ export default class Control {
         var temp = this.size;
         this.api = api
         this.sensors = sensors
-        ////console.log("testing in control hazTypes")
-        ////console.log(this.hazTypes)
-        //////console.log(typeof hazTypes[0].created_at)
-        ////console.log(this)
         this.container;
         this.map = map;
         if (this.size < 50) {
@@ -33,7 +29,7 @@ export default class Control {
             hazard.created_at = new Date(hazard.created_at);
             this.insert(hazard);
         }
-        // console.log(sensors)
+        //deep copies from sensor data and inserts it into the table
         this.sensors.forEach(Element =>{
             if (Element.sensor_status===1)
             {
@@ -43,47 +39,36 @@ export default class Control {
                 sensor.radius = 50;
                 sensor.type=1
                 sensor.radius = 50;
+                sensor.text="automated flood report"
                 this.insert(sensor)
             }
         })
         this.currentDate = new Date()
-        var twentyFourHoursAgo = new Date(this.currentDate.getTime() - (24 * 60 * 60 * 1000))
-        // this.filter(twentyFourHoursAgo,this.currentDate,"All")
     }
     //inserts a hazard into the list
     insert(hazard) {
-        ////////console.log("test")
         var newHazard = new Hazard(hazard, this.map, this.hazTypes, this.icons);
         if (this.current == this.size) {
             this.grow();
         }
         this.container[this.current++] = newHazard;
-        //console.log("inserting new hazard",this.container)
         if(this.filteredData)
             this.filteredData.push(newHazard)
 
     }
+    // second insert function that is used if you need to filter after inserting, used by the map page
     insert(hazard, start,end ,hazards) {
-        ////////console.log("test")
         var newHazard = new Hazard(hazard, this.map, this.hazTypes, this.icons);
         if (this.current == this.size) {
             this.grow();
         }
         this.container[this.current++] = newHazard;
-        //console.log("inserting new hazard",this.container)
         if(start,end,hazards)
         this.filter(start, end, hazards)
 
     }
+    //replaces the data with new data then filters itself
     update(newhazardList, start, end, hazards, sensors) {
-        // const newItems = newhazardList.filter(item => !this.hazardList.includes(item))
-        // //console.log("old List", this.hazardList)
-        // //console.log(newItems)
-        // newItems.forEach(element => {
-        //     this.insert(element)
-        // });
-        // delete this.container
-        // //console.log(this.container)
         this.removeAll()
         this.container = new Array(2 * newhazardList.length)
         let temp = newhazardList.length
@@ -91,11 +76,10 @@ export default class Control {
         for (let i = 0; i < temp; i++) {
             // Deep copy each object in hazardList
             let hazard = JSON.parse(JSON.stringify(newhazardList[i]));
-            // //console.log(hazard)
             hazard.created_at = new Date(hazard.created_at);
             this.insert(hazard);
         }
-        this.sensors.forEach(Element =>{
+        sensors.forEach(Element =>{
             if (Element.sensor_status===1)
             {
                 let sensor = JSON.parse(JSON.stringify(Element));
@@ -179,6 +163,7 @@ export default class Control {
             }
         }
     }
+    //removes the grouped hazards and replaces them with the normal view, triggered when zooming in
     unGroup(start, end, hazards, api) {
         if (this.grouped) {
             ////console.log("ungroup")
@@ -194,6 +179,7 @@ export default class Control {
 
         }
     }
+    // groups all icons together into small groups bassed off of the location of the icons //triggerd by zooming out
     async group() {
         if (!this.grouped) {
             ////console.log("group")
@@ -226,7 +212,6 @@ export default class Control {
                     })
                     .then(data => {
                         // Handle the response data here
-                        //console.log(data);
                         if (data[0])
                             item[2] = [data[0].lat, data[0].lon];
                     })

@@ -12,7 +12,7 @@ const DataItem = ({ id, created_at, type, latitude, longitude, text, radius, loc
     `;
 
     const time = new Date(created_at);
-
+    // click event for the item
     const handleClick = () => {
         if (onClick) {
             onClick({ latitude, longitude });

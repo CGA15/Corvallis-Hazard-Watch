@@ -27,15 +27,15 @@ import badWordsFilter from 'bad-words'
 //This is the react page for the map page 
 const MapPage = () => {
   var popup
-  const dataAge= useSelector(selectFetchedAt)
+  const dataAge = useSelector(selectFetchedAt)
   const mapContainerRef = useRef(null);
   // const haztypes = useSelector(selectHazTypes)
   const mapRef = useRef(null);
   // const [mapFunctions, setMapFunctions] = useState(null)
   const [dropDown, setDropDown] = useState(false)
   const currentTime = new Date();
-  const currentDate = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000 );
-  const twentyFourHoursAgo = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000 );
+  const currentDate = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
+  const twentyFourHoursAgo = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [checkList, setCheckList] = useState(false)
@@ -53,82 +53,67 @@ const MapPage = () => {
   const [controller, setController] = useState(null)
   const dispatch = useDispatch(); // Move useDispatch() outside of the component body
   const apiKey = 'bed1848ba67a4ff12b0e3c2f5c0421fe';
- const {lat,lon,time } = useParams();
- const[grouped,setGrouped] = useState(false)
- const[update,setUpdate] = useState()
- const[length, setLength] = useState(0)
+  const { lat, lon, time } = useParams();
+  const [grouped, setGrouped] = useState(false)
+  const [update, setUpdate] = useState()
+  const [length, setLength] = useState(0)
 
   const { isAuthenticated } = useAuth0();
 
 
 
 
- // Function to request permission and get the user's location
-function getUserLocation() {
-  if (navigator.permissions) {
-    // Check if the Permissions API is supported
-    navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
-      if (permissionStatus.state === 'granted') {
-        // Permission already granted, get the user's location
-        getLocation();
-      } else if (permissionStatus.state === 'prompt') {
-        // Permission not yet granted, ask the user
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            // User has granted permission, get the location
-            getLocation();
-          },
-          (error) => {
-            console.error('Error getting user location:', error.message);
-          }
-        );
-      } else {
-        // Permission denied or unavailable
-        // map.setView([44.5646, -123.2620], 15);
+  // Function to request permission and get the user's location
+  function getUserLocation() {
+    if (navigator.permissions) {
+      // Check if the Permissions API is supported
+      navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
+        if (permissionStatus.state === 'granted') {
+          // Permission already granted, get the user's location
+          getLocation();
+        } else if (permissionStatus.state === 'prompt') {
+          // Permission not yet granted, ask the user
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              // User has granted permission, get the location
+              getLocation();
+            },
+            (error) => {
+              console.error('Error getting user location:', error.message);
+            }
+          );
+        } else {
+          // Permission denied or unavailable
+          // map.setView([44.5646, -123.2620], 15);
 
-        console.error('Geolocation permission denied or unavailable.');
-      }
-    });
-  } else {
-    // Permissions API not supported
-    // map.setView([44.5646, -123.2620], 15);
-
-    console.error('Permissions API is not supported in this browser.');
-  }
-}
-
-// Function to get the user's location
-function getLocation() {
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      ////console.log('Latitude:', latitude);
-      ////console.log('Longitude:', longitude);
-      // Now you can use latitude and longitude to center your map
-      // For example, set it as the initial state in your component
-      ////console.log(`map.setView([${latitude}, ${longitude}], 12);`)
-      ////console.log(map)
-      map.setView([latitude, longitude], 14);
-      return latitude,longitude
-    },
-    (error) => {
+          console.error('Geolocation permission denied or unavailable.');
+        }
+      });
+    } else {
+      // Permissions API not supported
       // map.setView([44.5646, -123.2620], 15);
-      console.error('Error getting user location:', error.message);
+
+      console.error('Permissions API is not supported in this browser.');
     }
-  );
-}
-
-// Call getUserLocation to initiate the process
-
-
-
-
-  // Define the renderReactComponentToHTML function to convert a React component to HTML string
-  function renderReactComponentToHTML(component) {
-    const htmlString = renderToString(component);
-    return htmlString;
   }
+
+  // Function to get the user's location
+  function getLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        map.setView([latitude, longitude], 14);
+        return latitude, longitude
+      },
+      (error) => {
+        // map.setView([44.5646, -123.2620], 15);
+        console.error('Error getting user location:', error.message);
+      }
+    );
+  }
+
+  //updates the content in the popup made, updates the radio check and the slider
   function updatePopupContent(randomNum) {
     var circleRadio = document.getElementById(`circleRadio${randomNum}`);
     var radiusSlider = document.getElementById(`radiusSlider${randomNum}`);
@@ -161,131 +146,121 @@ function getLocation() {
     map.closePopup();
   }
   //function for when you click the submit button. 
-  function submitData(lat, long, hazardType, time, type, rad, text, popup,randomNum) {
+  function submitData(lat, long, hazardType, time, type, rad, text, popup, randomNum) {
     // Handle submission logic here
-    ////////console.log(rad)
-    // //console.log(typeof lat, lat)
-    // //console.log(typeof long, long)
     const badLength = document.getElementById(`bad-length${randomNum}`)
-    var badWordsCaught= document.getElementById(`bad-words${randomNum}`)
-    badWordsCaught.style.display ='none'
-    badLength.style.display ='none'
+    var badWordsCaught = document.getElementById(`bad-words${randomNum}`)
+    badWordsCaught.style.display = 'none'
+    badLength.style.display = 'none'
 
-    const filter = new badWordsFilter 
-    if(long<-180 || long >180)
-    {
-      var lat=lat - Math.floor((lat+90)/180)*180
-      var long=long - Math.floor((long+180)/360)*360
-      map.setView([lat,long],13)
-    } 
-    // //console.log(typeof lat2, lat2)
-    // //console.log(typeof long2, long2)
-    // alert(`Data submitted!\nLat: ${lat2}\nLong: ${long2}\nType: ${hazardType}\nTime: ${time}\nRadius: ${rad}\nText: ${text}`);
-    if (text.length >200){
+    const filter = new badWordsFilter
+    if (long < -180 || long > 180) {
+      var lat = lat - Math.floor((lat + 90) / 180) * 180
+      var long = long - Math.floor((long + 180) / 360) * 360
+      map.setView([lat, long], 13)
+    }
+    if (text.length > 200) {
       const badLengthValue = document.getElementById(`bad-length-value${randomNum}`)
-      badLength.style.display ='block'
-      badLengthValue.textContent= text.length-200 +" characters over the limit"
+      badLength.style.display = 'block'
+      badLengthValue.textContent = text.length - 200 + " characters over the limit"
       const mapSize = map.getSize();
       const latlng = { lat: lat, lng: long };
       const mapBounds = map.getBounds();
 
-        // Calculate the vertical offset in pixels from the bottom
+      // Calculate the vertical offset in pixels from the bottom
       const offsetY = 0//mapSize.y/2;
 
-        // Convert the offset to geographical units
+      // Convert the offset to geographical units
       const latLngBottomPoint = map.containerPointToLatLng([mapSize.x / 2, mapSize.y - offsetY]);
 
-        // Calculate the new center latitude
+      // Calculate the new center latitude
       const centerLat = latlng.lat - (latLngBottomPoint.lat - mapBounds.getCenter().lat);
-        
-        // Pan the map to the new center
+
+      // Pan the map to the new center
       map.panTo([centerLat, latlng.lng]);
     }
-    else if (filter.isProfane(text))
-    {
+    //checks for bad language
+    else if (filter.isProfane(text)) {
       const badWords = findCensoredWords(text, filter.clean(text));
-      var badWordsId = document.getElementById(`bad-words-found${randomNum}`)     
-      badWordsId.textContent=badWords;    
-      badWordsCaught.style.display ='block'
+      var badWordsId = document.getElementById(`bad-words-found${randomNum}`)
+      badWordsId.textContent = badWords;
+      badWordsCaught.style.display = 'block'
       const mapSize = map.getSize();
       const latlng = { lat: lat, lng: long };
       const mapBounds = map.getBounds();
 
-        // Calculate the vertical offset in pixels from the bottom
+      // Calculate the vertical offset in pixels from the bottom
       const offsetY = 0//mapSize.y/2;
 
-        // Convert the offset to geographical units
+      // Convert the offset to geographical units
       const latLngBottomPoint = map.containerPointToLatLng([mapSize.x / 2, mapSize.y - offsetY]);
 
-        // Calculate the new center latitude
+      // Calculate the new center latitude
       const centerLat = latlng.lat - (latLngBottomPoint.lat - mapBounds.getCenter().lat);
-        
-        // Pan the map to the new center
+
+      // Pan the map to the new center
       map.panTo([centerLat, latlng.lng]);
 
     }
-    else
-    {
-      newHazard(lat, long, hazardType, time, rad ,text)
+    else {
+      newHazard(lat, long, hazardType, time, rad, text)
       map.closePopup();
     }
   }
+  // finds the words that were censored
   function findCensoredWords(original, censored) {
     const originalWords = original.split(' ');
     const censoredWords = censored.split(' ');
     var result = "";
 
     for (let i = 0; i < originalWords.length; i++) {
-        if (censoredWords[i].includes('*')) {
-            result+=originalWords[i] + " ";
-        }
+      if (censoredWords[i].includes('*')) {
+        result += originalWords[i] + " ";
+      }
     }
 
     return result;
-}
-  const newHazard =  async (lat, long, htype, time, rad, textContent) =>{
+  }
+  //creates a new hazard icon on the map
+  const newHazard = async (lat, long, htype, time, rad, textContent) => {
     var locdata = "N/A"
     try {
       const limit = 1;
       const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=${limit}&appid=${apiKey}`);
       const location = await response.json();
-      ////console.log(location);
-      if(location[0] && location[0].country && location[0].country === "US")
-            {
-                const locString = `${location[0].name},${location[0].state}, ${location[0].country}`
-                locdata=locString;
-                 // put(hazards[i], hazards[i].id)
-            }
-            else
-            {
-                if(location[0] && location[0].country)
-                {
-                    const locString = `${location[0].name}, ${location[0].country}`
-                    locdata=locString;
-                }
-                else{
-                    locdata="N/A";
-                }
-            }
-      } catch (error) {
-          console.error(error);
-          throw new Error('Error fetching location data');
+      //formats bassed off of US data
+      if (location[0] && location[0].country && location[0].country === "US") {
+        const locString = `${location[0].name},${location[0].state}, ${location[0].country}`
+        locdata = locString;
       }
-    if (rad == 0)
-        rad = null
-    let hazard = {
-        latitude: lat,
-        longitude: long,
-        created_at: time,
-        type: parseInt(htype, 10),
-        icon_type: null,
-        text: textContent,  
-        image: null,
-        creator_id: 10,
-        radius: rad,
-        location: locdata
+      //generic layout for location
+      else {
+        if (location[0] && location[0].country) {
+          const locString = `${location[0].name}, ${location[0].country}`
+          locdata = locString;
+        }
+        else {
+          locdata = "N/A";
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error fetching location data');
     }
-    ////console.log(controller)
+    if (rad == 0)
+      rad = null
+    let hazard = {
+      latitude: lat,
+      longitude: long,
+      created_at: time,
+      type: parseInt(htype, 10),
+      icon_type: null,
+      text: textContent,
+      image: null,
+      creator_id: 10,
+      radius: rad,
+      location: locdata
+    }
     const start = new Date(startDate);
     const end = new Date(endDate);
     var hazards = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
@@ -293,33 +268,35 @@ function getLocation() {
     if (hazards.length === 0) {
       hazards = "All";
     }
-    controller.insert(hazard,start,end,hazards)
-    hazard.created_at= hazard.created_at.toLocaleString()
-    // const dispatch = useDispatch()
+    //inserts hazard into the map
+    controller.insert(hazard, start, end, hazards)
+    hazard.created_at = hazard.created_at.toLocaleString()
+    // adds the hazard itno local data
     dispatch(add(hazard))
+    //adds hazard into db
     fetch('./api/addHazard', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(hazard),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(hazard),
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // //////console.log('Server response:', data);
-            // Handle the response data as needed
-        })
-        .catch(error => {
-            console.error('Error:', error.message);
-            // Handle errors
-        });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // //////console.log('Server response:', data);
+        // Handle the response data as needed
+      })
+      .catch(error => {
+        console.error('Error:', error.message);
+        // Handle errors
+      });
 
-}
+  }
 
   // Define the onMapClick function
   const onMapClick = (e) => {
@@ -327,16 +304,7 @@ function getLocation() {
     if (!isAuthenticated) {
       alert('You need to be signed in to post a hazard');
       return;
-    }else{
-      
-       //const popupContent = renderReactComponentToHTML(<MapPopUp e={e} map={map} />);
-
-      //////console.log("set On Click")
-
-      // L.popup()
-      //   .setLatLng(e.latlng)
-      //   .setContent(popupContent)
-      //   .openOn(map);
+    } else {
       const randomNum = Math.floor(Math.random() * 100000000) + 1;
       var popupContent = `
                       <div>
@@ -384,19 +352,20 @@ function getLocation() {
       });
 
       document.getElementById(`submitButton${randomNum}`).addEventListener('click', () =>
-        submitData(e.latlng.lat, e.latlng.lng, document.getElementById(`hazard${randomNum}`).value, new Date(), getHazardType(randomNum), getRadius(randomNum),document.getElementById(`textInput${randomNum}`).value, popup,randomNum)
+        submitData(e.latlng.lat, e.latlng.lng, document.getElementById(`hazard${randomNum}`).value, new Date(), getHazardType(randomNum), getRadius(randomNum), document.getElementById(`textInput${randomNum}`).value, popup, randomNum)
       );
     }
 
   }
-
- const getData = async () =>{
-      dispatch(fetchSensor())
-      dispatch(fetchData())
-      setUpdate(true)
+  // gets the data from redux store
+  const getData = async () => {
+    dispatch(fetchSensor())
+    dispatch(fetchData())
+    setUpdate(true)
   }
+  //use effect that will run when hazards, sensors and update are set, this is to update current displayed content
   useEffect(() => {
-    if(update && hazards.length!=length && controller){
+    if (update && hazards.length != length && controller) {
       // //console.log("update called")
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -409,33 +378,29 @@ function getLocation() {
       setLength(hazards.length)
       setUpdate(null)
     }
-  },[hazards,sesnors, update])
+  }, [hazards, sesnors, update])
   //when the page loads, it will run this code to initialize the map
   useEffect(() => {
     // Function to initialize the map
     if (hazards.length > 0) {
       const initializeMap = () => {
         // Check if the map is already initialized
-       
+
         if (!mapContainerRef.current._leaflet_id) {
           // Create a Leaflet map with an initial view
-        if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)) && !isNaN(parseFloat(time))) {
-            ////console.log("they are numbers")
-            const newStart = new Date(parseFloat(time)- 24 * 60 * 60 * 1000)
-            const newEnd = new Date(parseFloat(time)+ 24 * 60 * 60 * 1000)
+          if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)) && !isNaN(parseFloat(time))) {
+            const newStart = new Date(parseFloat(time) - 24 * 60 * 60 * 1000)
+            const newEnd = new Date(parseFloat(time) + 24 * 60 * 60 * 1000)
             setStartDate(newStart.toISOString())
             setEndDate(newEnd.toISOString())
             setMap(L.map(mapContainerRef.current).setView([parseFloat(lat), parseFloat(lon)], 18));
 
-        } else {
-          ////console.log("they arent numbers", typeof lat)
-          setStartDate(twentyFourHoursAgo.toISOString())
-          setEndDate(currentDate.toISOString())
-          setMap(L.map(mapContainerRef.current).setView([44.564568,-123.262047], 15));
-        }
-          // setMap(L.map(mapContainerRef.current).setView([44.5646, -123.2620], 15));
+          } else {
+            setStartDate(twentyFourHoursAgo.toISOString())
+            setEndDate(currentDate.toISOString())
+            setMap(L.map(mapContainerRef.current).setView([44.564568, -123.262047], 15));
+          }
 
-          // Add a tile layer to the map        
         }
       };
 
@@ -449,77 +414,62 @@ function getLocation() {
     return () => {
       // Cleanup code, not currently needed
     };
-  }, [hazards]); // Empty dependency array ensures that it runs only once on mount
+  }, [hazards]); // dependent on the hazards array
+  //adds tile layer to the map and creates the control object that runs the map
   useEffect(() => {
-    if (map && !setUpOnce &&sesnors) {
+    if (map && !setUpOnce && sesnors) {
       setSetUpOnce(false)
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
       mapRef.current = map;
-      
-      const controller = new Control(hazards,map,hazardTypes,apiKey, icons,sesnors)
+
+      const controller = new Control(hazards, map, hazardTypes, apiKey, icons, sesnors)
       setLength(hazards.length)
       setController(controller)
-      if(isNaN(parseFloat(lat)))
+      if (isNaN(parseFloat(lat)))
         getUserLocation()
-      ////console.log("check",controller)
-      
-     
-
-
-      //////console.log("haztypes check one")
-      //////console.log(haztypes)
     }
-  }, [map, setUpOnce, sesnors])
-  useEffect (() => {
-    if(controller)
-    {
-      if(Date.now() - dataAge > 5*1000)
-      {
+  }, [map, setUpOnce, sesnors])//dependent on map and sesnors variables updating for this to be called
+
+  //sets up the map functions and initial filter
+  useEffect(() => {
+    if (controller) {
+      if (Date.now() - dataAge > 5 * 1000) {
         // //console.log("data too old")
         getData()
-       
+
       }
       map.on('click', (e) => onMapClick(e))
       var start
       var endTime
       if (!isNaN(parseFloat(time))) {
-         start = new Date(parseFloat(time) - 24 * 60 * 60 * 1000)
-         endTime =new Date(parseFloat(time) + 24 * 60 * 60 * 1000)
-      } 
-      else
-      {
+        start = new Date(parseFloat(time) - 24 * 60 * 60 * 1000)
+        endTime = new Date(parseFloat(time) + 24 * 60 * 60 * 1000)
+      }
+      else {
         start = twentyFourHoursAgo;
         endTime = currentDate
       }
-      ////console.log("start",start)
-      ////console.log("end",endTime)
-      controller.filter(start,endTime,"All")
+      controller.filter(start, endTime, "All")
       map.on('zoomend', function () {
         // Get the current zoom level
         const currentZoom = map.getZoom();
-  
+
         // Check if the zoom level is below a certain threshold
-        if (currentZoom >= 13) {
-            // Zoomed out, do something
-            // ////console.log('Zoom bound');           
-              unGroup();             
+        if (currentZoom >= 13) {         
+          unGroup();
         }
-        else
-        {           
-              group();              
+        else {
+          group();
         }
       });
     }
-    
+
   }, [controller])
 
-  const openFilters = () => {
-    setDropDown(!dropDown)
-
-  }
+  //gather filter data then filter the results
   const submitFilters = () => {
     // Gather filter values
     const start = new Date(startDate);
@@ -530,69 +480,51 @@ function getLocation() {
       hazards = "All";
     }
 
-    ////////console.log(start, end, hazards);
-
     // Pass filters to mapFunctions.filter()
     controller.filter(start, end, hazards);
   };
-
+// updates when you change a selection in the checkbox
   const handleCheckboxChange = (hazardName) => {
     setSelectedHazards(prevState => ({
       ...prevState,
       [hazardName]: !prevState[hazardName],
     }));
   };
+// hadnles logic to run the hazardControls group code
+  const group = () => {
 
-const group = () => {
-  
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-    var hazards = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
-
-    if (hazards.length === 0) {
-      hazards = "All";
-    }
     controller.group()
- 
-}
 
-const unGroup = () =>{
-  
-  const start = new Date(startDate);
+  }
+// hadnles logic to run the hazardControls ungroup code
+
+  const unGroup = () => {
+
+    const start = new Date(startDate);
     const end = new Date(endDate);
     var hazards = Object.keys(selectedHazards).filter(hazardId => selectedHazards[hazardId]);
 
     if (hazards.length === 0) {
       hazards = "All";
     }
-    ////console.log(controller)
-    controller.unGroup(start,end,hazards, apiKey)
+    controller.unGroup(start, end, hazards, apiKey)
     submitFilters()
     //due to leaflet not wanting to update values, this was the best way I could get the program to work
+    //these functions were passed statically I think which made it so in order to filter with new data, I needed to
+    // use a click event so that it clicks the filter button rather then filtering with the method above
     const targetElement = document.getElementById('desperate');
-      if (targetElement) {
-        const clickEvent = new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-          view: window
-        });
-        targetElement.dispatchEvent(clickEvent);
-      }
-  
-}
+    if (targetElement) {
+      const clickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      targetElement.dispatchEvent(clickEvent);
+    }
 
-
-  // var checkList = document.getElementById('list1');
-  // checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
-  //   if (checkList.classList.contains('visible'))
-  //     checkList.classList.remove('visible');
-  //   else
-  //     checkList.classList.add('visible');
-  // }
-  const openCheckList = () => {
-    ////////console.log("hello")
-    setCheckList(!checkList)
   }
+
+
   const filterBox = css`
  text-align: right;
  position: relative;
@@ -604,7 +536,7 @@ const unGroup = () =>{
       <div css={filterBox}>
         {/* <button onClick={openFilters}>Filters</button> */}
         {/* {dropDown && ( */}
-        {startDate && endDate &&( <div>
+        {startDate && endDate && (<div>
           Start Date:
           <input
             type='date'
@@ -641,12 +573,12 @@ const unGroup = () =>{
           </div>
           <button id='desperate' onClick={submitFilters}>Submit</button>
         </div>)}
-       
+
         {/* )} */}
 
       </div>
       <div ref={mapContainerRef} id="map" style={{ height: '70vh' }}>
-      
+
       </div>
       <p>To create a hazard, first be signed in, then click anywhere on the map</p>
     </div>

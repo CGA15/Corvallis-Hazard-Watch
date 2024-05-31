@@ -25,7 +25,7 @@
       const [selectedHazards, setSelectedHazards] = useState({});
       const componentRef = useRef();
       const navigateUse = useNavigate();
-
+      //resets filters
       const clearFilters = () => {
           setStartDate(twentyFourHoursAgo.toISOString())
           setEndDate(currentDate.toISOString())
@@ -33,6 +33,7 @@
           setSelectedHazards({});
           submitFilters();
       }
+      //will gather filter data from user input then run it into the filter
       const submitFilters = (searchString) => {
           // Gather filter values
           const start = new Date(startDate);
@@ -72,16 +73,18 @@
         color: black; /* Change font color to black */
     }
   `;
-
+    // this will initiallize the data for the table
       useEffect(() =>{
         const updatedHazards = []
           sesnors.forEach(Element => {
+            if(Element.sensor_status==1){
             let sensor = JSON.parse(JSON.stringify(Element));
             sensor.created_at = new Date(sensor.last_updated)
             sensor.type=1
             sensor.radius = 50;
             sensor.description = "automated flood report"
             updatedHazards.push(sensor)
+            }
           })
           hazards.forEach(Element => {
             updatedHazards.push(JSON.parse(JSON.stringify(Element)))
@@ -92,9 +95,7 @@
           setHazardsData(updatedHazards)
           
       },[hazards,sesnors])
-    //   const handlePrint = useReactToPrint({
-    //     content: () => componentRef.current,
-    // })
+      // filters bassed off of date, type and location
       const filter = (minDate,maxDate,type, hazardsFilter,searchString) =>{
           // viewAll()
           console.log(searchString)
@@ -110,11 +111,7 @@
           const searchElm = document.getElementById("locationSearch")
           searchElm.value = searchString
       }
-      // const viewAll = () => {
-      //     for (let i = 0; i < this.current; i++) {
-      //         this.container[i].show();
-      //     }
-      // }
+      //removes things items from an array if the location caregory doesn not contain the fields sepceified by searchString
       const filterByName = (hazards,searchString) => {
         console.log("filter by name: ",searchString)
 
@@ -136,12 +133,13 @@
         });
         return hazards
       }
-      
+      // removes if outside of time bounds
       const filterByTime = (min,max, hazards) =>{
           // console.log(hazardsData[0])
           hazards = hazards.filter(item => new Date(item.created_at).getTime() > min.getTime() && new Date(item.created_at).getTime() < max.getTime());
           return hazards
       }
+      // removes if it does not contain one of the valid types
       const filterByType = (hazardType,hazards) => {
           if(hazardType!="All"){
               hazards = hazards.filter(item => hazardType.includes(item.type.toString()))    
@@ -149,6 +147,7 @@
           console.log(hazards)
           return hazards
       }
+      //links from the data view to map page with the string specifying location and time
       const navigate = (item) =>{
         const time = new Date(item.created_at).getTime()
         const navstring =`/map/${item.latitude}/${item.longitude}/${time}`
@@ -156,6 +155,7 @@
         navigateUse(navstring);
 
       }
+      //saves curretn table as a .csv file
       const saveAs = () => {
         // Format hazards data into CSV string
         var csvContent = "ID,Created At,Type,Location,Text,Radius,latitude,longitude\n";

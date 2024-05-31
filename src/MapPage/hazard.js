@@ -6,8 +6,6 @@ export default class Hazard {
         this.date=this.dateObject.toLocaleString()
         this.types = haztypes
         this.icons = icons
-        // //console.log("icons in hazard",icons)
-        // //console.log("haztypes in hazard",haztypes)
         this.long=hazard.longitude
         this.type=this.types.find(type => type.id === hazard.type)?.name || "Other";
         this.icon=icons.find(type => type.id === hazard.type) || icons.find(type=> type.id ===100);
@@ -44,6 +42,7 @@ export default class Hazard {
             this.visible=false  ;
         }
     }
+    // returns if it is visible //dont think this is used
     isVisible(){
         return this.visible
     }

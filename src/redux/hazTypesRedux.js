@@ -1,4 +1,6 @@
 // storeSlice.js
+
+//this slice stores hazard data
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const FileLocation = "/api/hazardtypes.json";

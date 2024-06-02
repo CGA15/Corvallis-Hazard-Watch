@@ -25,30 +25,7 @@
     app.get('/', function (req, res, next) {
         res.sendFile(__dirname + "/dist/index.html");
     });
-    // app.get('/map', function (req, res, next) {
-    //     const requestedFile = req.params.request;
-    //     const filePath = __dirname + "/dist/" + requestedFile;
-
-    //     res.sendFile(filePath, function (err) {
-    //         if (err) {
-    //             next(err); // Pass the error to the next middleware
-    //         } else {
-    //             console.log('File sent:', filePath);
-    //         }
-    //     });
-    // });
-
-    // app.get('/font-awesome-4.7.0/css/:item',function(req,res,next){
-    //     const filepath=__dirname+ "/font-awesome-4.7.0/css/" + item;
-    //     console.log("=========" + filepath)
-    //     res.sendFile(filepath, function (err) {
-    //         if (err) {
-    //             next(err); // Pass the error to the next middleware
-    //         } else {
-    //             console.log('File sent:', filepath);
-    //         }
-    //     });
-    // })
+   
     app.get('/api/Hazards', async (req, res) => {
         try {
             const { data, error } = await supabase.from('hazards').select('*');
@@ -85,6 +62,8 @@
         }
     });
     
+    // async function to get the sensor's current status based on
+    // the sensor's name
     async function getSensorCurrentStatus(sName) {
         try {
             const { data, error } = await supabase
@@ -109,12 +88,13 @@
 
         console.log(req.body)
 
+        // error catching the request body
         if(!sensor_name || sensor_status === undefined) {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
-        if(sensor_status > 1 || sensor_status < 0) {
-            return res.status(400).json({ message: "sensor_status is only allowed to be 0 or 1" })
+        if(sensor_status > 3 || sensor_status < 0) {
+            return res.status(400).json({ message: "sensor_status is only allowed to be 0-3" })
         }
 
         try {
@@ -176,6 +156,7 @@
             res.status(500).json({ error: "Internal Server Error"});
         }
     })
+    
     app.get('/api/getsensor', async (req, res) => {
         try {
             const { data, error } = await supabase.from('sensor').select('*');

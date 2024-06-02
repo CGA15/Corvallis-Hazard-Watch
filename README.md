@@ -1,6 +1,9 @@
 # Hazard-Watch
  Oregon State University Capstone Project
 
+### DOCUMENTATION
+Lengthier project documentation is located in the "docs" folder where you can find our handoff_docs.md and handoff_docs.pdf files.  We left both files, so you can choose your own adventure.
+
 ### Public Hosting
 The Hazard Watch Website is currently publicly hosted using Google Cloud Web Hosting Servicies through the following link, 
 https://praxis-works-422517-c2.uw.r.appspot.com/

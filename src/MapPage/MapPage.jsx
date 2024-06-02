@@ -52,7 +52,7 @@ const MapPage = () => {
 
   const [controller, setController] = useState(null)
   const dispatch = useDispatch(); // Move useDispatch() outside of the component body
-  const apiKey = 'bed1848ba67a4ff12b0e3c2f5c0421fe';
+  const apiKey = process.env.OPEN_WEATHER_KEY
   const { lat, lon, time } = useParams();
   const [grouped, setGrouped] = useState(false)
   const [update, setUpdate] = useState()

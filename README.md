@@ -19,3 +19,6 @@ Once the user is logged in, simply click anywhere on the map where the hazard is
 ### Local Hosting
 The Hazard Watch Website can be locally hosted on your machine. Simply clone the repository to your local either through Github Desktop or running the command "gh repo clone CGA15/Corvallis-Hazard-Watch" 
 Once the Repository is cloned run "npm run build" and the website will begin running on localhost:8000.
+in order to run you will need to set environment variables 
+process.env.SUPABASE_KEY
+process.env.OPEN_WEATHER_KEY
